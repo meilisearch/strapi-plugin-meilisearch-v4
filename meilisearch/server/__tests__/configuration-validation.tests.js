@@ -123,4 +123,28 @@ describe('Test plugin configuration file', () => {
     expect(strapiMock.log.warn).toHaveBeenCalledTimes(0)
     expect(strapiMock.log.error).toHaveBeenCalledTimes(1)
   })
+
+  test('Test configuration with settings parameter in contentType ', async () => {
+    validateConfiguration({
+      contentTypes: {
+        restaurant: {
+          settings: {},
+        },
+      },
+    })
+    expect(strapiMock.log.warn).toHaveBeenCalledTimes(0)
+    expect(strapiMock.log.error).toHaveBeenCalledTimes(0)
+  })
+
+  test('Test configuration with bad type settings parameter in contentType ', async () => {
+    validateConfiguration({
+      contentTypes: {
+        restaurant: {
+          settings: 1,
+        },
+      },
+    })
+    expect(strapiMock.log.warn).toHaveBeenCalledTimes(0)
+    expect(strapiMock.log.error).toHaveBeenCalledTimes(1)
+  })
 })

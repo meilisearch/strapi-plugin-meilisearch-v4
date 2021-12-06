@@ -1,6 +1,38 @@
 const { isObject } = require('../utils')
 
+/**
+ * Validates the plugin configuration provided in `plugins/config.js` of the users plugin configuration.
+ * Modifies the value of config on place.
+ *
+ * @param  {object} config - configurations
+ */
 function validateConfiguration(config) {
+  const validPluginField = ['contentTypes']
+  const validApiFields = ['indexName', 'transformEntries', 'settings']
+
+  if (!config) {
+    return
+  }
+
+  if (!isObject(config)) {
+    strapi.log.error(
+      'The `config` field in the MeiliSearch  plugin configuration must be of type object'
+    )
+    throw new Error(
+      'Configuration field of the MeiliSearch plugin must be of type object'
+    )
+  }
+
+  // Validate the attributes
+  Object.keys(config).forEach(attribute => {
+    if (!validPluginField.includes(attribute)) {
+      strapi.log.warn(
+        `The field "${attribute}" in the MeiliSearch plugin config is not a valid parameter`
+      )
+      delete config[attribute]
+    }
+  })
+
   // Validate the `contentTypes` parameter
   if (config.contentTypes) {
     const { contentTypes } = config
@@ -21,8 +53,8 @@ function validateConfiguration(config) {
       }
       if (
         (contentTypes[api].indexName &&
-          contentTypes[api].indexName !== 'string',
-        contentTypes[api].indexName !== '')
+          typeof contentTypes[api].indexName !== 'string') ||
+        contentTypes[api].indexName === ''
       ) {
         strapi.log.error(
           `the indexName param of "${api}" in the MeiliSearch plugin config should be a none empty string`
@@ -31,7 +63,7 @@ function validateConfiguration(config) {
       }
       if (
         contentTypes[api].transformEntries &&
-        contentTypes[api].transformEntries !== 'Function'
+        typeof contentTypes[api].transformEntries !== 'function'
       ) {
         strapi.log.error(
           `the transformEntries param of "${api}" in the MeiliSearch plugin config should be of type Function`
@@ -45,6 +77,15 @@ function validateConfiguration(config) {
         )
         delete config.contentTypes[api].settings
       }
+
+      Object.keys(contentTypes[api]).forEach(attribute => {
+        if (!validApiFields.includes(attribute)) {
+          strapi.log.warn(
+            `${attribute} in "${api}" in the MeiliSearch plugin config is not a valid parameter`
+          )
+          delete contentTypes[api][attribute]
+        }
+      })
     }
   }
 }
