@@ -4,6 +4,7 @@
   "description": "Synchronise and search in your Strapi collections with MeiliSearch",
   "scripts": {
     "playground:dev": "yarn --cwd ./playground && yarn --cwd ./playground develop",
+    "playground:build": "yarn --cwd ./playground && yarn --cwd ./playground build",
     "style": "eslint --ext .js .",
     "style:fix": "eslint --ext .js . --fix",
     "test": "jest",
