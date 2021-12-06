@@ -5,7 +5,12 @@ module.exports = ({ env }) => ({
     enabled: true,
     resolve: path.resolve(__dirname, '../src/plugins/meilisearch'),
     config: {
-      // additional config goes here
+      contentTypes: {
+        "restaurant": {
+          indexName: []
+        },
+        "about": []
+      },
     }
   },
 
