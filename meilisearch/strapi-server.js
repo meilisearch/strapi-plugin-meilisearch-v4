@@ -13,6 +13,6 @@ module.exports = {
   services,
   routes,
   config: {
-    validator: config => validateConfiguration(config),
+    validator: validateConfiguration,
   },
 }

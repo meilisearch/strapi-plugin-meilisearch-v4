@@ -1,25 +1,19 @@
 'use strict'
 
 // module.exports = ({ services, models, logger }) => {
-module.exports = ({ services, models, logger }) => {
+module.exports = ({ strapi }) => {
   return {
     /**
-     * @brief: Map model name into the actual index name in meilisearch instance. it
-     * uses `indexName` property from model defnition
+     * Get the name of the index in which the collection is added.
      *
      * @param collection - Name of the Collection.
      *
      * @return {String} - Actual index name
      */
     getIndexName: function (collection) {
-      const model = models[collection].meilisearch || {}
-      const indexName = model.indexName || collection
-      if (typeof indexName !== 'string') {
-        logger.warn(
-          `[MEILISEARCH]: "indexName" setting provided in the model of the ${collection} must be a string.`
-        )
-        return collection
-      }
+      const conf =
+        strapi?.api[collection]?.services[collection]?.meilisearch || {}
+      const indexName = conf.indexName || collection
       return indexName
     },
 
@@ -32,19 +26,18 @@ module.exports = ({ services, models, logger }) => {
      *
      * @return {Array<Object>} - Converted or mapped data
      */
-    transformEntries: function ({ collection, entries }) {
-      const meilisearchConfig = models[collection].meilisearch || {}
-      const { transformEntry } = meilisearchConfig
+    transformEntries: function ({ collection, entries = [] }) {
+      const conf =
+        strapi?.api[collection]?.services[collection]?.meilisearch || {}
 
-      if (!transformEntry) {
-        return entries
-      }
       try {
-        if (Array.isArray(entries)) {
+        if (
+          Array.isArray(entries) &&
+          typeof conf?.transformEntry === 'function'
+        ) {
           return entries.map(entry =>
-            meilisearchConfig.transformEntry({
+            conf.transformEntry({
               entry,
-              model: models[collection],
               collection,
             })
           )
@@ -63,17 +56,10 @@ module.exports = ({ services, models, logger }) => {
      * @type {import('meilisearch').Settings}
      * @return {Settings} - MeiliSearch index settings
      */
-    getSettings: function (collection) {
-      const model = models[collection].meilisearch || {}
-      const settings = model.settings || {}
-
-      if (typeof settings !== 'object') {
-        logger.warn(
-          `[MEILISEARCH]: "settings" provided in the model of the ${collection} must be an object.`
-        )
-        return {}
-      }
-
+    getSettings: function ({ collection }) {
+      const conf =
+        strapi?.api[collection]?.services[collection]?.meilisearch || {}
+      const settings = conf.settings || {}
       return settings
     },
   }

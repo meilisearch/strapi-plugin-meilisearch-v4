@@ -98,3 +98,12 @@ module.exports = ({ env }) => {
 };
 
 ```
+
+## Debuging
+
+Every type error is raised from `strapi-server` while this one comes from `bootstrap.js`. It makes debugging very hard.
+
+```
+Error: Could not load js config file /strapi-plugin-meilisearch-v4/playground/src/plugins/meilisearch/strapi-server.js: Unexpected token '}'
+    at loadJsFile (/strapi-plugin-meilisearch-v4/playground/node_modules/@strapi/strapi/lib/core/app-configuration/load-config-file.js:18:11)
+```
