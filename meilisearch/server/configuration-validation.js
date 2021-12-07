@@ -8,7 +8,7 @@ const { isObject } = require('../utils')
  */
 function validateConfiguration(config) {
   const validPluginField = ['contentTypes']
-  const validApiFields = ['indexName', 'transformEntries', 'settings']
+  const validApiFields = ['indexName', 'transformEntry', 'settings']
 
   if (!config) {
     return
@@ -62,13 +62,13 @@ function validateConfiguration(config) {
         delete config.contentTypes[api].indexName
       }
       if (
-        contentTypes[api].transformEntries &&
-        typeof contentTypes[api].transformEntries !== 'function'
+        contentTypes[api].transformEntry &&
+        typeof contentTypes[api].transformEntry !== 'function'
       ) {
         strapi.log.error(
-          `the transformEntries param of "${api}" in the MeiliSearch plugin config should be of type Function`
+          `the transformEntry param of "${api}" in the MeiliSearch plugin config should be of type Function`
         )
-        delete config.contentTypes[api].transformEntries
+        delete config.contentTypes[api].transformEntry
       }
 
       if (contentTypes[api].settings && !isObject(contentTypes[api].settings)) {
