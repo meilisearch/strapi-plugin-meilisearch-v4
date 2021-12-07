@@ -100,11 +100,11 @@ describe('Test plugin configuration file', () => {
     expect(strapiMock.log.error).toHaveBeenCalledTimes(1)
   })
 
-  test('Test configuration with transformEntries parameter in contentType ', async () => {
+  test('Test configuration with transformEntry parameter in contentType ', async () => {
     validateConfiguration({
       contentTypes: {
         restaurant: {
-          transformEntries: () => {},
+          transformEntry: () => {},
         },
       },
     })
@@ -112,11 +112,11 @@ describe('Test plugin configuration file', () => {
     expect(strapiMock.log.error).toHaveBeenCalledTimes(0)
   })
 
-  test('Test configuration with bad type transformEntries parameter in contentType ', async () => {
+  test('Test configuration with bad type transformEntry parameter in contentType ', async () => {
     validateConfiguration({
       contentTypes: {
         restaurant: {
-          transformEntries: 1,
+          transformEntry: 1,
         },
       },
     })
