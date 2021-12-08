@@ -9,7 +9,7 @@ const { isObject } = require('../utils')
 function validateConfiguration(config) {
   const validPluginField = ['host', 'apiKey']
 
-  if (!config) {
+  if (config === undefined) {
     return
   }
 
@@ -31,7 +31,10 @@ function validateConfiguration(config) {
   })
 
   // Validate the `host` parameter
-  if ((config.host && typeof config.host !== 'string') || config.host === '') {
+  if (
+    (config.host !== undefined && typeof config.host !== 'string') ||
+    config.host === ''
+  ) {
     strapi.log.error(
       '`host` should be a none empty string in MeiliSearch configuration'
     )
@@ -39,7 +42,7 @@ function validateConfiguration(config) {
   }
 
   // Validate the `apikey` parameter
-  if (config.apiKey && typeof config.apiKey !== 'string') {
+  if (config.apiKey !== undefined && typeof config.apiKey !== 'string') {
     strapi.log.error('`apiKey` should be a string in MeiliSearch configuration')
     delete config.apiKey
   }
@@ -58,7 +61,7 @@ function validateContentTypeConfig({ strapi, api }) {
 
   const configuration = strapi.service(api).meilisearch
 
-  if (!configuration) {
+  if (configuration === undefined) {
     return
   }
 
@@ -71,7 +74,8 @@ function validateContentTypeConfig({ strapi, api }) {
   }
 
   if (
-    (configuration.indexName && typeof configuration.indexName !== 'string') ||
+    (configuration.indexName !== undefined &&
+      typeof configuration.indexName !== 'string') ||
     configuration.indexName === ''
   ) {
     strapi.log.error(
@@ -80,7 +84,7 @@ function validateContentTypeConfig({ strapi, api }) {
     delete configuration.indexName
   }
   if (
-    configuration.transformEntry &&
+    configuration.transformEntry !== undefined &&
     typeof configuration.transformEntry !== 'function'
   ) {
     strapi.log.error(
@@ -89,10 +93,10 @@ function validateContentTypeConfig({ strapi, api }) {
     delete configuration.transformEntry
   }
 
-  if (configuration.settings && !isObject(configuration.settings)) {
-    strapi.log.error(
-      `the "transformEntry" param in the "${apiName}" service should be should be a function`
-    )
+  if (
+    configuration.settings !== undefined &&
+    !isObject(configuration.settings)
+  ) {
     strapi.log.error(
       `the "settings" param in the "${apiName}" service should be should be an object`
     )

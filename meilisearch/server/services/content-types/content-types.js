@@ -1,13 +1,4 @@
 'use strict'
-
-// FIXME: Ignored until a elegant solution is found to index users
-// That does not involve if`s everywhere
-function isUserPermissionEnabled(strapi) {
-  return Object.keys(strapi.contentTypes).includes(
-    'plugin::users-permissions.user'
-  )
-}
-
 module.exports = ({ strapi }) => ({
   /**
    *

@@ -38,7 +38,7 @@ describe('Test plugin configuration', () => {
 
   test('Test configuration with not used attribute', async () => {
     validateConfiguration({
-      hello: 1,
+      hello: 0,
     })
     expect(fakeStrapi.log.warn).toHaveBeenCalledTimes(1)
     expect(fakeStrapi.log.error).toHaveBeenCalledTimes(0)
@@ -84,7 +84,7 @@ describe('Test plugin configuration', () => {
 
   test('Test configuration with wrong time apiKey', async () => {
     validateConfiguration({
-      apiKey: 1,
+      apiKey: 0,
     })
     expect(fakeStrapi.log.warn).toHaveBeenCalledTimes(0)
     expect(fakeStrapi.log.error).toHaveBeenCalledTimes(1)
@@ -149,7 +149,7 @@ describe('Test API configurations', () => {
 
   test('Test with wrong type meilisearch configurations', async () => {
     const customStrapi = createFakeStrapi({
-      restaurantConfig: { meilisearch: 1 },
+      restaurantConfig: { meilisearch: 0 },
     })
     validateContentTypeConfig({ strapi: customStrapi, api: apis.restaurant })
 
@@ -177,7 +177,7 @@ describe('Test API configurations', () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
         meilisearch: {
-          indexName: 1,
+          indexName: 0,
         },
       },
     })
@@ -216,7 +216,7 @@ describe('Test API configurations', () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
         meilisearch: {
-          transformEntry: 1,
+          transformEntry: 0,
         },
       },
     })
@@ -238,12 +238,51 @@ describe('Test API configurations', () => {
     expect(customStrapi.log.error).toHaveBeenCalledTimes(0)
   })
 
+  test('Test configuration with undefined settings ', async () => {
+    const customStrapi = createFakeStrapi({
+      restaurantConfig: {
+        meilisearch: {
+          settings: undefined,
+        },
+      },
+    })
+    validateContentTypeConfig({ strapi: customStrapi, api: apis.restaurant })
+    expect(customStrapi.log.warn).toHaveBeenCalledTimes(0)
+    expect(customStrapi.log.error).toHaveBeenCalledTimes(0)
+  })
+
+  test('Test configuration with wrong type settings ', async () => {
+    const customStrapi = createFakeStrapi({
+      restaurantConfig: {
+        meilisearch: {
+          settings: 0,
+        },
+      },
+    })
+    validateContentTypeConfig({ strapi: customStrapi, api: apis.restaurant })
+    expect(customStrapi.log.warn).toHaveBeenCalledTimes(0)
+    expect(customStrapi.log.error).toHaveBeenCalledTimes(1)
+  })
+
+  test('Test configuration with function type settings ', async () => {
+    const customStrapi = createFakeStrapi({
+      restaurantConfig: {
+        meilisearch: {
+          settings: {},
+        },
+      },
+    })
+    validateContentTypeConfig({ strapi: customStrapi, api: apis.restaurant })
+    expect(customStrapi.log.warn).toHaveBeenCalledTimes(0)
+    expect(customStrapi.log.error).toHaveBeenCalledTimes(0)
+  })
+
   test('Test configuration with none supported field ', async () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
         meilisearch: {
           transformEntry: () => {},
-          wrongField: 1,
+          wrongField: 0,
         },
       },
     })
