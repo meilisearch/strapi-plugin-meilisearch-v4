@@ -7,8 +7,8 @@
     "playground:build": "yarn --cwd ./playground && yarn --cwd ./playground build",
     "style": "eslint --ext .js .",
     "style:fix": "eslint --ext .js . --fix",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --testPathPattern=tests",
+    "test:watch": "jest --watch --testPathPattern=tests"
   },
   "strapi": {
     "name": "meilisearch",

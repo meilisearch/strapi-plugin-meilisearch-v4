@@ -15,7 +15,7 @@ function validateConfiguration(config) {
 
   if (!isObject(config)) {
     strapi.log.error(
-      'The `config` field in the MeiliSearch  plugin configuration must be of type object'
+      'The `config` field in the MeiliSearch plugin configuration must be of type object'
     )
     config = {}
   }
@@ -31,7 +31,7 @@ function validateConfiguration(config) {
   })
 
   // Validate the `host` parameter
-  if (config.host && typeof config.host !== 'string') {
+  if ((config.host && typeof config.host !== 'string') || config.host === '') {
     strapi.log.error(
       '`host` should be a none empty string in MeiliSearch configuration'
     )
@@ -40,38 +40,36 @@ function validateConfiguration(config) {
 
   // Validate the `apikey` parameter
   if (config.apiKey && typeof config.apiKey !== 'string') {
-    strapi.log.error(
-      '`apiKey` should be a none empty string in MeiliSearch configuration'
-    )
+    strapi.log.error('`apiKey` should be a string in MeiliSearch configuration')
     delete config.apiKey
   }
 }
 
 function validateContentTypeConfigs({ strapi }) {
   const apis = strapi.plugin('meilisearch').service('contentTypes').getApis()
-  console.log(apis)
   for (const api of apis) {
-    validateContentTypeConfig(api)
+    validateContentTypeConfig({ strapi, api })
   }
 }
 
-function validateContentTypeConfig(api) {
+function validateContentTypeConfig({ strapi, api }) {
   const validApiFields = ['indexName', 'transformEntry', 'settings']
   const apiName = api.split('.')[1]
 
-  console.log(api)
   const configuration = strapi.service(api).meilisearch
 
   if (!configuration) {
     return
   }
 
-  if (configuration && !isObject(configuration)) {
+  if (configuration !== undefined && !isObject(configuration)) {
     strapi.log.error(
       `The "meilisearch" configuration in the ${apiName} service should be of type object`
     )
-    strapi.service('api::restaurant.restaurant').meilisearch = {}
+    strapi.service(api).meilisearch = {}
+    return
   }
+
   if (
     (configuration.indexName && typeof configuration.indexName !== 'string') ||
     configuration.indexName === ''
