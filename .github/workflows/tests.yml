@@ -52,6 +52,12 @@ jobs:
           path: |
             ./node_modules
           key: ${{ hashFiles('yarn.lock') }}
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./playground/node_modules
+          key: ${{ hashFiles('playground/yarn.lock') }}
       - name: Install dependencies
         run: yarn --dev && yarn --cwd ./playground
       - name: Build Strapi playground
