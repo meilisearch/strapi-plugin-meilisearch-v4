@@ -16,9 +16,5 @@ module.exports = {
   // An object that configures minimum threshold enforcement for coverage results
   coverageThreshold: undefined,
 
-  // A path to a custom dependency extractor
-  // dependencyExtractor: undefined,
-
-  // Make calling deprecated APIs throw helpful error messages
-  // errorOnDeprecated: false,
+  testMatch: ['**/__tests__/**/*.tests.[jt]s?(x)'],
 }
