@@ -7,7 +7,6 @@ module.exports = ({ env }) => ({
     config: {
       // host: string
       // apiKey : string
-
       // Do not create a field with a function as parameter.
       // Strapi removes silently the field.
       // All other types are accepted (as far as I know).

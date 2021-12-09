@@ -5,8 +5,8 @@
   "scripts": {
     "playground:dev": "yarn --cwd ./playground && yarn --cwd ./playground develop",
     "playground:build": "yarn --cwd ./playground && yarn --cwd ./playground build",
-    "style": "eslint --ext .js .",
-    "style:fix": "eslint --ext .js . --fix",
+    "style": "eslint --ext .js,.test.js .",
+    "style:fix": "eslint --ext .js,.test.js . --fix",
     "test": "jest --testPathPattern=tests",
     "test:watch": "jest --watch --testPathPattern=tests"
   },

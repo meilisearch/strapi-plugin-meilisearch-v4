@@ -1,15 +1,21 @@
+const defaultContentTypes = require('./content-types-list')
+
 const apis = {
-  restaurant: 'api::restaurant.restaurant',
-  about: 'api::about:about',
+  restaurant: 'restaurant',
+  about: 'about',
 }
 
-function createFakeStrapi({ restaurantConfig = {}, aboutConfig = {} }) {
+function createFakeStrapi({
+  restaurantConfig = {},
+  aboutConfig = {},
+  contentTypes = defaultContentTypes,
+}) {
   const fakeService = jest.fn(api => {
-    if (api == 'api::restaurant.restaurant') {
+    if (api == 'restaurant') {
       return {
         ...restaurantConfig,
       }
-    } else if (api == 'api::about.about') {
+    } else if (api == 'about') {
       return {
         ...aboutConfig,
       }
@@ -20,22 +26,54 @@ function createFakeStrapi({ restaurantConfig = {}, aboutConfig = {} }) {
     service: fakePluginService,
   }))
 
-  const fakePluginService = jest.fn(() => ({
-    getApis: fakeGetApiFunction,
-  }))
-
   const fakeGetApiFunction = jest.fn(() => {
-    return ['api::restaurant.restaurant', 'api::about.about']
+    return ['restaurant', 'about']
   })
 
+  const fakeGetAPIConfig = jest.fn(({ apiName }) => {
+    if (apiName == 'restaurant') {
+      return {
+        ...restaurantConfig,
+      }
+    } else if (apiName == 'about') {
+      return {
+        ...aboutConfig,
+      }
+    }
+  })
+
+  const fakePluginService = jest.fn(() => ({
+    getApisName: fakeGetApiFunction,
+    getAPIConfig: fakeGetAPIConfig,
+  }))
+
   const fakeLogger = {
-    error: jest.fn(() => 'test'),
-    warn: jest.fn(() => 'test'),
+    error: jest.fn(() => {}),
+    warn: jest.fn(() => {}),
   }
+  const fakeApi = {
+    restaurant: {
+      services: {
+        restaurant: {
+          meilisearch: restaurantConfig,
+        },
+      },
+    },
+    about: {
+      services: {
+        about: {
+          meilisearch: aboutConfig,
+        },
+      },
+    },
+  }
+
   const fakeStrapi = {
     log: fakeLogger,
     service: fakeService,
     plugin: fakePlugin,
+    contentTypes,
+    api: fakeApi,
   }
   return fakeStrapi
 }

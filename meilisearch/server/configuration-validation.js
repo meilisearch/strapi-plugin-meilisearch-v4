@@ -36,7 +36,7 @@ function validateConfiguration(config) {
     config.host === ''
   ) {
     strapi.log.error(
-      '`host` should be a none empty string in MeiliSearch configuration'
+      '`host` should be a non-empty string in MeiliSearch configuration'
     )
     delete config.host
   }
@@ -48,18 +48,24 @@ function validateConfiguration(config) {
   }
 }
 
-function validateContentTypeConfigs({ strapi }) {
-  const apis = strapi.plugin('meilisearch').service('contentTypes').getApis()
-  for (const api of apis) {
-    validateContentTypeConfig({ strapi, api })
+function validateApiConfigs({ strapi }) {
+  const apis = strapi
+    .plugin('meilisearch')
+    .service('contentTypes')
+    .getApisName()
+
+  for (const apiName of apis) {
+    validateApiConfig({ strapi, apiName })
   }
 }
 
-function validateContentTypeConfig({ strapi, api }) {
+function validateApiConfig({ strapi, apiName }) {
   const validApiFields = ['indexName', 'transformEntry', 'settings']
-  const apiName = api.split('.')[1]
 
-  const configuration = strapi.service(api).meilisearch
+  const configuration = strapi
+    .plugin('meilisearch')
+    .service('contentTypes')
+    .getAPIConfig({ apiName }).meilisearch
 
   if (configuration === undefined) {
     return
@@ -69,7 +75,7 @@ function validateContentTypeConfig({ strapi, api }) {
     strapi.log.error(
       `The "meilisearch" configuration in the ${apiName} service should be of type object`
     )
-    strapi.service(api).meilisearch = {}
+    strapi.api[apiName].services[apiName] = {}
     return
   }
 
@@ -79,7 +85,7 @@ function validateContentTypeConfig({ strapi, api }) {
     configuration.indexName === ''
   ) {
     strapi.log.error(
-      `the "indexName" param in the "${apiName}" service should be a none empty string`
+      `the "indexName" param in the "${apiName}" service should be a non-empty string`
     )
     delete configuration.indexName
   }
@@ -98,7 +104,7 @@ function validateContentTypeConfig({ strapi, api }) {
     !isObject(configuration.settings)
   ) {
     strapi.log.error(
-      `the "settings" param in the "${apiName}" service should be should be an object`
+      `the "settings" param in the "${apiName}" service should be an object`
     )
     delete configuration.settings
   }
@@ -106,7 +112,7 @@ function validateContentTypeConfig({ strapi, api }) {
   Object.keys(configuration).forEach(attribute => {
     if (!validApiFields.includes(attribute)) {
       strapi.log.warn(
-        `${attribute} in "${apiName}" in the MeiliSearch plugin config is not a valid parameter`
+        `${attribute} in the "${apiName}" service is not a valid parameter`
       )
       delete configuration[attribute]
     }
@@ -116,6 +122,6 @@ function validateContentTypeConfig({ strapi, api }) {
 
 module.exports = {
   validateConfiguration,
-  validateContentTypeConfigs,
-  validateContentTypeConfig,
+  validateApiConfigs,
+  validateApiConfig,
 }

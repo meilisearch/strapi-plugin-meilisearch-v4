@@ -155,8 +155,8 @@ console.log(await strapi.db.query('api::restaurant.restaurant').count())
 ## Working with the database:
 
 ```js
-  console.log(await strapi.entityService.count('api::restaurant.restaurant'))
-  console.log(await strapi.db.query('api::restaurant.restaurant').count())
+  await strapi.entityService.count('api::restaurant.restaurant')
+  await strapi.db.query('api::restaurant.restaurant').count()
 ```
 
 ## Store
@@ -169,4 +169,32 @@ console.log(strapi.service('plugin::meilisearch.store'))
 
 ```js
   const meilisearchConfig = strapi.config.get('plugin.meilisearch')
+```
+
+
+## Get user list
+```js
+// FIXME: Ignored until a elegant solution is found to index users
+// That does not involve if`s everywhere
+function isUserPermissionEnabled(strapi) {
+  return Object.keys(strapi.contentTypes).includes(
+    'plugin::users-permissions.user'
+  )
+}
+```
+
+
+
+
+## Get API configurations
+
+```js
+const conf =
+        strapi?.api[collection]?.services[collection]?.meilisearch || {}
+```
+
+Documentation :  https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-templates-generate
+
+```
+strapi --template corporate
 ```

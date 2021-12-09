@@ -1,8 +1,8 @@
 'use strict'
-const contentTypesGetter = require('./content-types')
-const configs = require('./configs')
+const contentTypes = require('./content-types')
+const configurations = require('./api-configs')
 
 module.exports = ({ strapi }) => ({
-  ...contentTypesGetter({ strapi }),
-  ...configs({ strapi }),
+  ...contentTypes({ strapi }),
+  ...configurations({ strapi }),
 })
