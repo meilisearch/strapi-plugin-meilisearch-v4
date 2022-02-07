@@ -23,7 +23,7 @@
     "services"
   ],
   "dependencies": {
-    "@strapi/utils": "^4.0.0",
+    "@strapi/utils": "^4.0.7",
     "meilisearch": "^0.23.0"
   },
   "author": {
