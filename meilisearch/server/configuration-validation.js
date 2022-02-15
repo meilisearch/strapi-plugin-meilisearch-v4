@@ -7,8 +7,6 @@ const { isObject } = require('../utils')
  * @param  {object} config - configurations
  */
 function validateConfiguration(config) {
-  const validPluginField = ['host', 'apiKey']
-
   if (config === undefined) {
     return
   }
@@ -19,22 +17,11 @@ function validateConfiguration(config) {
     )
     config = {}
   }
-
-  // Validate the attributes
-  Object.keys(config).forEach(attribute => {
-    if (!validPluginField.includes(attribute)) {
-      strapi.log.warn(
-        `The field "${attribute}" in the MeiliSearch plugin config is not a valid parameter`
-      )
-      delete config[attribute]
-    }
-  })
+  // TODO: validate configuration of collection
+  const { host, apiKey, ...collections } = config
 
   // Validate the `host` parameter
-  if (
-    (config.host !== undefined && typeof config.host !== 'string') ||
-    config.host === ''
-  ) {
+  if ((host !== undefined && typeof host !== 'string') || config.host === '') {
     strapi.log.error(
       '`host` should be a non-empty string in MeiliSearch configuration'
     )
@@ -42,15 +29,17 @@ function validateConfiguration(config) {
   }
 
   // Validate the `apikey` parameter
-  if (config.apiKey !== undefined && typeof config.apiKey !== 'string') {
+  if (apiKey !== undefined && typeof apiKey !== 'string') {
     strapi.log.error('`apiKey` should be a string in MeiliSearch configuration')
     delete config.apiKey
   }
+  // TODO: validate here
 }
 
+// TODO: Not used
 function validateAllConfigurations({ strapi }) {
   const apis = strapi
-    .plugin('meilisearch')
+    .plugin('meilisearch') // TODO: Does not exist when validating the config file with the validator
     .service('contentTypes')
     .getApisName()
 
@@ -65,7 +54,7 @@ function validateApiConfig({ strapi, apiName }) {
   const configuration = strapi
     .plugin('meilisearch')
     .service('contentTypes')
-    .getAPIConfig({ apiName }).meilisearch
+    .getAPIServices({ apiName }).meilisearch
 
   if (configuration === undefined) {
     return

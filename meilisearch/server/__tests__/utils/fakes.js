@@ -30,7 +30,7 @@ function createFakeStrapi({
     return ['restaurant', 'about']
   })
 
-  const fakeGetAPIConfig = jest.fn(({ apiName }) => {
+  const fakeGetAPIServices = jest.fn(({ apiName }) => {
     if (apiName == 'restaurant') {
       return {
         ...restaurantConfig,
@@ -44,7 +44,7 @@ function createFakeStrapi({
 
   const fakePluginService = jest.fn(() => ({
     getApisName: fakeGetApiFunction,
-    getAPIConfig: fakeGetAPIConfig,
+    getAPIServices: fakeGetAPIServices,
   }))
 
   const fakeLogger = {

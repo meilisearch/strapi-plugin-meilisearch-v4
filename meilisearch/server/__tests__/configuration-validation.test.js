@@ -134,9 +134,11 @@ describe('Test API configurations', () => {
 
     expect(customStrapi.log.warn).toHaveBeenCalledTimes(0)
     expect(customStrapi.log.error).toHaveBeenCalledTimes(0)
-    expect(customStrapi.plugin().service().getAPIConfig).toHaveBeenCalledWith({
-      apiName: apis.restaurant,
-    })
+    expect(customStrapi.plugin().service().getAPIServices).toHaveBeenCalledWith(
+      {
+        apiName: apis.restaurant,
+      }
+    )
   })
 
   test('Test with empty meilisearch configurations', async () => {

@@ -357,7 +357,7 @@ describe('Test API configurations', () => {
       strapi: customStrapi,
     })
 
-    const confs = contentTypeServices.getAllAPIConfiguration()
+    const confs = contentTypeServices.getAllAPIservices()
 
     expect(confs.map(config => Object.keys(config)[0])).toEqual([
       'restaurant',
@@ -382,7 +382,7 @@ describe('Test API configurations', () => {
     })
 
     const apiName = 'restaurant'
-    const conf = contentTypeServices.getAPIConfig({ apiName: apiName })
+    const conf = contentTypeServices.getAPIServices({ apiName: apiName })
     expect(Object.keys(conf)[0]).toEqual('meilisearch')
   })
 })
