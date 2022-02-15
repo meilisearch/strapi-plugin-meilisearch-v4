@@ -5,7 +5,7 @@ const { createFakeStrapi } = require('./utils/fakes')
 const fakeStrapi = createFakeStrapi({})
 global.strapi = fakeStrapi
 
-describe('Test API configurations', () => {
+describe.skip('Test API configurations', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     jest.restoreAllMocks()
@@ -165,7 +165,7 @@ describe('Test API configurations', () => {
     expect(settings).toEqual({})
   })
 
-  test('Test configuration with correct transformEntry ', async () => {
+  test.skip('Test configuration with correct transformEntry ', async () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
         transformEntry: ({ entry }) => {
