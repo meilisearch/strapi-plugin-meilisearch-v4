@@ -1,4 +1,11 @@
 'use strict'
+// TODO: fetch documents ✅
+// Bulk action with fetched documents ✅
+// TODO: Use filtering configuration for entry fetching
+// TODO: listCollectionsWithIndexName -> Return all collections having the provided indexName setting. ✅
+// TODO: numberOfEntries/totalNumberOfEntries -> Number of entries in a collection.  ✅
+// TODO: allEligbleCollections (not only multi type collections) ❌ Temp: getApisName
+// TODO: getEntriesBatch ✅
 
 module.exports = ({ strapi }) => ({
   /**
@@ -145,5 +152,115 @@ module.exports = ({ strapi }) => ({
       if (Array.isArray(info)) cbResponse.push(...info)
     }
     return cbResponse
+  },
+
+  /**
+   * Wether the collection exists or not
+   *
+   * @param  {string} collection - Name of the collection.
+   *
+   * @returns  {number}
+   */
+  collectionExists({ collection }) {
+    return !!this.getApisName().find(api => api === collection)
+  },
+
+  /**
+   * Return all collections having the provided indexName setting.
+   *
+   * @param  {string} indexName
+   */
+  listCollectionsWithIndexName: async function ({ indexName }) {
+    const multiRowsCollections = this.getApisName() || []
+    const collectionsWithIndexName = multiRowsCollections.filter(
+      collection =>
+        strapi
+          .plugin('meilisearch')
+          .service('contentTypes')
+          .getIndexName({ indexName: collection }) === indexName
+    )
+    return collectionsWithIndexName
+  },
+
+  /**
+   * Number of entries in a collection.
+   *
+   * @param  {string} collection - Name of the collection.
+   *
+   * @returns  {number}
+   */
+  numberOfEntries: async function ({ collection, where = {} }) {
+    if (!this.collectionExists({ collection })) return 0
+    const count = await strapi.db
+      .query(`api::${collection}.${collection}`)
+      .count({ where })
+    return count
+  },
+
+  /**
+   * Returns the total number of entries of the collections.
+   *
+   * @param  {string[]} collections
+   *
+   * @returns {number} Total entries number.
+   */
+  totalNumberOfEntries: async function ({ collections }) {
+    let collectionsEntriesSize = await Promise.all(
+      collections.map(async col => await this.numberOfEntries(col))
+    )
+    return collectionsEntriesSize.reduce((acc, curr) => (acc += curr), 0)
+  },
+
+  /**
+   * Returns a batch of entries.
+   *
+   * @param  {object} batchOptions
+   * @param  {number} start - Starting batch number.
+   * @param  {number} limit - Size of batch.
+   * @param  {string} collection - Collection name.
+   *
+   * @returns  {object[]} - Entries.
+   */
+  async findManyOfCollection({ collection, start = 0, limit = 500 }) {
+    if (!this.collectionExists({ collection })) return []
+
+    // TODO: get filters from settings
+    // https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/entity-service/crud.html#findmany
+    const entries = await strapi.entityService.findMany(
+      `api::${collection}.${collection}`,
+      {
+        publicationState: 'live',
+        start,
+        limit,
+      }
+    )
+    return entries || []
+  },
+
+  /**
+   * Apply an action on all the entries of the provided collection.
+   *
+   * @param  {string} collection
+   * @param  {function} callback - Function applied on each entry of the collection
+   *
+   * @returns {any[]} - List of all the returned elements from the callback.
+   */
+  actionInBatches: async function ({ collection, callback }) {
+    const BATCH_SIZE = 500
+    // Need total number of entries in collection
+    const entries_count = await this.numberOfEntries({ collection })
+    const response = []
+
+    for (let index = 0; index <= entries_count; index += BATCH_SIZE) {
+      const entries =
+        (await this.findManyOfCollection({
+          start: index,
+          limit: BATCH_SIZE,
+          collection,
+        })) || []
+      const info = await callback(entries, collection)
+      if (info != null) response.push(info)
+    }
+    return response
   },
 })
