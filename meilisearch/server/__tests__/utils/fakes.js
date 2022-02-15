@@ -68,12 +68,20 @@ function createFakeStrapi({
     },
   }
 
+  const fakeConfig = {
+    get: jest.fn(() => {
+      return {
+        restaurant: {},
+      }
+    }),
+  }
   const fakeStrapi = {
     log: fakeLogger,
     service: fakeService,
     plugin: fakePlugin,
     contentTypes,
     api: fakeApi,
+    config: fakeConfig,
   }
   return fakeStrapi
 }

@@ -17,7 +17,6 @@ function validateConfiguration(config) {
     )
     config = {}
   }
-  // TODO: validate configuration of collection
   const { host, apiKey, ...collections } = config
 
   // Validate the `host` parameter
@@ -33,48 +32,34 @@ function validateConfiguration(config) {
     strapi.log.error('`apiKey` should be a string in MeiliSearch configuration')
     delete config.apiKey
   }
-  // TODO: validate here
-}
 
-// TODO: Not used
-function validateAllConfigurations({ strapi }) {
-  const apis = strapi
-    .plugin('meilisearch') // TODO: Does not exist when validating the config file with the validator
-    .service('contentTypes')
-    .getApisName()
-
-  for (const apiName of apis) {
-    validateApiConfig({ strapi, apiName })
+  for (const collection in collections) {
+    config[collection] = validateCollectionConfiguration({
+      configuration: collections[collection],
+      collection: collection,
+    })
   }
 }
 
-function validateApiConfig({ strapi, apiName }) {
+function validateCollectionConfiguration({ configuration, collection }) {
   const validApiFields = ['indexName', 'transformEntry', 'settings']
-
-  const configuration = strapi
-    .plugin('meilisearch')
-    .service('contentTypes')
-    .getAPIServices({ apiName }).meilisearch
 
   if (configuration === undefined) {
     return
   }
 
   if (configuration !== undefined && !isObject(configuration)) {
-    strapi.log.error(
-      `The "meilisearch" configuration in the ${apiName} service should be of type object`
-    )
-    strapi.api[apiName].services[apiName] = {}
-    return
+    strapi.log.error(`The collection "${collection}" should be of type object`)
+    return {}
   }
 
+  const { indexName } = configuration
   if (
-    (configuration.indexName !== undefined &&
-      typeof configuration.indexName !== 'string') ||
-    configuration.indexName === ''
+    (indexName !== undefined && typeof indexName !== 'string') ||
+    indexName === ''
   ) {
     strapi.log.error(
-      `the "indexName" param in the "${apiName}" service should be a non-empty string`
+      `the "indexName" param of "${collection}" should be a non-empty string`
     )
     delete configuration.indexName
   }
@@ -83,7 +68,7 @@ function validateApiConfig({ strapi, apiName }) {
     typeof configuration.transformEntry !== 'function'
   ) {
     strapi.log.error(
-      `the "transformEntry" param in the "${apiName}" service should be should be a function`
+      `the "transformEntry" param of "${collection}" should be a function`
     )
     delete configuration.transformEntry
   }
@@ -93,7 +78,7 @@ function validateApiConfig({ strapi, apiName }) {
     !isObject(configuration.settings)
   ) {
     strapi.log.error(
-      `the "settings" param in the "${apiName}" service should be an object`
+      `the "settings" param of "${collection}" should be an object`
     )
     delete configuration.settings
   }
@@ -101,7 +86,7 @@ function validateApiConfig({ strapi, apiName }) {
   Object.keys(configuration).forEach(attribute => {
     if (!validApiFields.includes(attribute)) {
       strapi.log.warn(
-        `${attribute} in the "${apiName}" service is not a valid parameter`
+        `The attribute "${attribute}" of "${collection}" is not a known parameter`
       )
       delete configuration[attribute]
     }
@@ -111,6 +96,4 @@ function validateApiConfig({ strapi, apiName }) {
 
 module.exports = {
   validateConfiguration,
-  validateAllConfigurations,
-  validateApiConfig,
 }
