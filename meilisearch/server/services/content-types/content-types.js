@@ -191,6 +191,7 @@ module.exports = ({ strapi }) => ({
    */
   numberOfEntries: async function ({ collection, where = {} }) {
     if (!this.collectionExists({ collection })) return 0
+
     const count = await strapi.db
       .query(`api::${collection}.${collection}`)
       .count({ where })
@@ -227,7 +228,8 @@ module.exports = ({ strapi }) => ({
     // TODO: get filters from settings
     // https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/entity-service/crud.html#findmany
     const entries = await strapi.entityService.findMany(
-      `api::${collection}.${collection}`,
+      // `api::${apiName}.${contentType}`: uid
+      `api::${collection}.${collection}`, // TODO: only works with content types
       {
         publicationState: 'live',
         start,
