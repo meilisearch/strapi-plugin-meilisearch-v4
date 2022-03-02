@@ -8,7 +8,8 @@
     "style": "eslint --ext .js,.test.js .",
     "style:fix": "eslint --ext .js,.test.js . --fix",
     "test": "jest --testPathPattern=tests",
-    "test:watch": "jest --watch --testPathPattern=tests"
+    "test:watch": "jest --watch --testPathPattern=tests",
+    "strapi": "strapi"
   },
   "strapi": {
     "name": "meilisearch",
@@ -23,6 +24,7 @@
     "services"
   ],
   "dependencies": {
+    "@strapi/strapi": "^4.0.8",
     "@strapi/utils": "^4.0.0",
     "meilisearch": "^0.23.0"
   },
