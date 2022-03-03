@@ -1955,10 +1955,21 @@
     lodash "4.17.21"
     yup "0.32.9"
 
-"@strapi/utils@4.0.7", "@strapi/utils@^4.0.7":
+"@strapi/utils@4.0.7":
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-4.0.7.tgz#718823fcf23c028a65ce8c317a36cc6d7321eb0c"
   integrity sha512-coGjVudsnlXvb20mobyeoguCfXKnLjXnKhYiMoS6wqy4ozazu12+5MsCh7Hs9UAkvK4Fzhf7+urvyoj/UpSkaQ==
+  dependencies:
+    "@sindresorhus/slugify" "1.1.0"
+    date-fns "2.24.0"
+    http-errors "1.8.0"
+    lodash "4.17.21"
+    yup "0.32.9"
+
+"@strapi/utils@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@strapi/utils/-/utils-4.1.2.tgz#1772b66490dcc0aff1e51345f79cdfe1284af9af"
+  integrity sha512-MMT6zIg9G0SMUCHAB27OrDrrU7bIXcg0FXSlyOAyzXMV5aZKXp9vbS5pPmxSc5nxOvooPxjWRLJB8sLyM6f7sw==
   dependencies:
     "@sindresorhus/slugify" "1.1.0"
     date-fns "2.24.0"
