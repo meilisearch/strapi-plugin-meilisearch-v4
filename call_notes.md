@@ -3,7 +3,7 @@
   - They are both in development mode
   - there is no port option in the CLI
 
-- How do I get all content-types: ✅ 
+- How do I get all content-types: ✅
   - Native
   - user permissions
   - other plugins
@@ -20,10 +20,10 @@
   const config = strapi.plugin('meilisearch').config ⁇
   console.log(config) // A function
   const config2 = strapi.config.get('plugin.meilisearch')
-  console.log(config2) // the config 
+  console.log(config2) // the config
 ```
 
-- How do I add lifecycles functions to different collections without writing in the dedicated file: 
+- How do I add lifecycles functions to different collections without writing in the dedicated file:
   https://docs.strapi.io/developer-docs/latest/development/backend-customization/models.html#declarative-and-programmatic-usage
   - in `contentTypes` >   `lifecycles: {}` 🌙 ⁇
 
@@ -35,9 +35,9 @@
   - back end should work as before
   - front end ? @strapi/utils
 
-- confirmDialog 🌙 
+- confirmDialog 🌙
 
-- UTILS: 
+- UTILS:
   - `sanitizeEntity` -> How do I import it?
   ```js
       const modelDef = strapi.getModel(model);
@@ -52,7 +52,7 @@
 - buffet becomes design-system -> https://github.com/strapi/design-system
   - is there a doc with the components
   - Story book
-  - plugin helper front end 
+  - plugin helper front end
 
 
 https://github.com/strapi/strapi/blob/master/packages/core/strapi/lib/Strapi.js
