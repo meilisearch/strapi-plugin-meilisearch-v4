@@ -104,10 +104,7 @@ module.exports = ({ strapi }) => {
       console.log({ contentTypes })
 
       const contentTypeWithIndexName = contentTypes.filter(contentType => {
-        const name = strapi
-          .plugin('meilisearch')
-          .service('meilisearch')
-          .getIndexNameOfCollection({ collection: contentType })
+        const name = this.getIndexNameOfCollection({ collection: contentType })
         return name === indexName
       })
       return contentTypeWithIndexName
