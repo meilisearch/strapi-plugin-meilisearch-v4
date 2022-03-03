@@ -28,7 +28,7 @@ module.exports = ({ strapi }) => ({
     const contentTypesName = Object.keys(strapi.contentTypes)
       .filter(contentType => !contentType.startsWith('admin::'))
       .reduce((names, contentType) => {
-        const name = contentType.split(/[(::)\.]/g)
+        const name = contentType.split(/[(::).]/g)
         names.push(name[name.length - 1])
         return names
       }, [])
