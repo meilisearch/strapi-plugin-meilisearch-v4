@@ -4,69 +4,37 @@ const apis = {
   restaurant: 'restaurant',
   about: 'about',
 }
-
+/**
+ * @param {object} config
+ * @param  {object} [config.restaurantConfig]
+ * @param  {object} [config.aboutConfig]
+ * @param  {object} [config.contentTypes]
+ */
 function createFakeStrapi({
   restaurantConfig = {},
   aboutConfig = {},
-  contentTypes = defaultContentTypes,
+  contentTypes,
 }) {
-  const fakeService = jest.fn(api => {
-    if (api == 'restaurant') {
-      return {
-        ...restaurantConfig,
-      }
-    } else if (api == 'about') {
-      return {
-        ...aboutConfig,
-      }
-    }
-  })
+  contentTypes = contentTypes || defaultContentTypes
 
   const fakePlugin = jest.fn(() => ({
     service: fakePluginService,
   }))
 
-  const fakeGetAPIServices = jest.fn(({ apiName }) => {
-    if (apiName == 'restaurant') {
-      return {
-        ...restaurantConfig,
-      }
-    } else if (apiName == 'about') {
-      return {
-        ...aboutConfig,
-      }
-    }
-  })
-
   const fakePluginService = jest.fn(() => ({
-    getAPIServices: fakeGetAPIServices,
+    getContentTypesName: () => ['restaurant', 'about'],
   }))
 
   const fakeLogger = {
     error: jest.fn(() => {}),
     warn: jest.fn(() => {}),
   }
-  const fakeApi = {
-    restaurant: {
-      services: {
-        restaurant: {
-          meilisearch: restaurantConfig,
-        },
-      },
-    },
-    about: {
-      services: {
-        about: {
-          meilisearch: aboutConfig,
-        },
-      },
-    },
-  }
 
   const fakeConfig = {
     get: jest.fn(() => {
       return {
-        restaurant: {},
+        restaurant: restaurantConfig,
+        about: aboutConfig,
       }
     }),
   }
@@ -90,10 +58,8 @@ function createFakeStrapi({
 
   const fakeStrapi = {
     log: fakeLogger,
-    service: fakeService,
     plugin: fakePlugin,
     contentTypes,
-    api: fakeApi,
     config: fakeConfig,
     db: fakeDb,
     entityService: fakeEntityService,

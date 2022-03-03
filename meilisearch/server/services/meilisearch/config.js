@@ -2,44 +2,36 @@
 const { isObject } = require('../../../utils')
 
 module.exports = ({ strapi }) => {
+  const meilisearchConfig = strapi.config.get('plugin.meilisearch') || {}
   return {
     /**
-     * Get the name of the index in which the collection content is added.
+     * Get the name of the index from Meilisearch in which the collection content is added.
      *
-     * The apiName is the name of the API to access information about a specific collection
-     * it is in `name` format and not `api::name.name`
-     *
-     * @param apiName - Name of the api.
+     * @param collection - Name of the collection.
      *
      * @return {String} - Index name
      */
     getIndexNameOfCollection: function ({ collection }) {
-      const meilisearchConfig = strapi.config.get('plugin.meilisearch') || {}
-      console.log({ meilisearchConfig, collection })
       const collectionConfig = meilisearchConfig[collection] || {}
-      console.log(
-        { collectionConfig },
-        collectionConfig.indexName || collection
-      )
       return collectionConfig.indexName || collection
     },
 
     /**
      * Transform collections entries before indexation in MeiliSearch.
      *
-     * @param {string} apiName - apiName name.
-     * @param {Array<Object>} data  - The data to convert. Conversion will use
+     * @param {object} options - Collection name.
+     * @param {string} options.collection - Collection name.
+     * @param {Array<Object>} options.entries  - The data to convert. Conversion will use
      * the static method `toSearchIndex` defined in the model definition
      *
      * @return {Array<Object>} - Converted or mapped data
      */
-    transformEntries: function ({ apiName, entries = [] }) {
-      const pluginConfig = strapi.config.get('plugin.meilisearch') || {}
-      const apiConfig = pluginConfig[apiName] || {}
+    transformEntries: function ({ collection, entries = [] }) {
+      const apiConfig = meilisearchConfig[collection] || {}
 
       const aborted = () => {
         strapi.log.error(
-          'Indexing of ${apiName} aborted as the data could not be transformed'
+          'Indexing of ${collection} aborted as the data could not be transformed'
         )
         return [] // return empty array to avoid indexing entries that might contain sensitive data
       }
@@ -52,13 +44,14 @@ module.exports = ({ strapi }) => {
           const transformed = entries.map(entry =>
             apiConfig.transformEntry({
               entry,
-              apiName,
+              collection,
             })
           )
 
           if (transformed.length > 0 && !isObject(transformed[0])) {
             return aborted()
           }
+
           return transformed
         }
       } catch (e) {
@@ -71,37 +64,36 @@ module.exports = ({ strapi }) => {
 
     /**
      * Returns MeiliSearch index settings from model definition.
-     * @param apiName - Name of the apiName.
+     *
+     * @param {object} options
+     * @param {string} options.collection - Collection name.
+     * @param {Array<Object>} [options.entries]  - The data to convert. Conversion will use
+
      * @typedef Settings
      * @type {import('meilisearch').Settings}
      * @return {Settings} - MeiliSearch index settings
      */
-    getSettings: function ({ apiName }) {
-      const pluginConfig = strapi.config.get('plugin.meilisearch') || {}
-      const apiConfig = pluginConfig[apiName] || {}
+    getSettings: function ({ collection }) {
+      const apiConfig = meilisearchConfig[collection] || {}
 
       const settings = apiConfig.settings || {}
       return settings
     },
 
-    getAPIServices: function ({ apiName }) {
-      return strapi.api[apiName]?.services[apiName] || {}
-    },
-
-    changeConfigurations: function ({ configuration, apiName }) {
-      return (strapi.api[apiName].services[apiName] = configuration)
-    },
-
     /**
      * Return all collections having the provided indexName setting.
      *
-     * @param  {string} indexName
+     * @param {object} options
+     * @param {string} options.indexName - Index in Meilisearch.
+     *
+     * @returns {string[]} List of collections storing its data in the provided indexName
      */
-    listCollectionsWithCustomIndexName: async function ({ indexName }) {
-      console.log({ indexName })
-
-      const contentTypes = this.getContentTypesName() || []
-      console.log({ contentTypes })
+    listCollectionsWithCustomIndexName: function ({ indexName }) {
+      const contentTypes =
+        strapi
+          .plugin('meilisearch')
+          .service('contentTypes')
+          .getContentTypesName() || []
 
       const contentTypeWithIndexName = contentTypes.filter(contentType => {
         const name = this.getIndexNameOfCollection({ collection: contentType })

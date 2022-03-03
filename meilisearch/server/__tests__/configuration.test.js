@@ -1,11 +1,11 @@
-const createContentTypeService = require('../services/content-types')
+const createMeilisearchService = require('../services/meilisearch')
 
 const { createFakeStrapi } = require('./utils/fakes')
 
 const fakeStrapi = createFakeStrapi({})
 global.strapi = fakeStrapi
 
-describe.skip('Test API configurations', () => {
+describe('Test Meilisearch plugin configurations', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
     jest.restoreAllMocks()
@@ -14,22 +14,23 @@ describe.skip('Test API configurations', () => {
   test('Test with no meilisearch configurations', async () => {
     const customStrapi = createFakeStrapi({})
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
@@ -39,22 +40,22 @@ describe.skip('Test API configurations', () => {
       restaurantConfig: {},
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
@@ -64,22 +65,22 @@ describe.skip('Test API configurations', () => {
       restaurantConfig: 1,
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
@@ -89,23 +90,23 @@ describe.skip('Test API configurations', () => {
       restaurantConfig: {},
     })
 
-    const apiName = 'customName'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'customName'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
 
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
@@ -117,23 +118,23 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'customName'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'customName'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
 
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
@@ -145,27 +146,27 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }])
     expect(settings).toEqual({})
   })
 
-  test.skip('Test configuration with correct transformEntry ', async () => {
+  test('Test configuration with correct transformEntry ', async () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
         transformEntry: ({ entry }) => {
@@ -177,22 +178,22 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([
       { id: 1, name: 'hello' },
       { id: 2, name: 'hello' },
@@ -209,22 +210,22 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([])
     expect(settings).toEqual({})
   })
@@ -236,22 +237,22 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([])
     expect(settings).toEqual({})
   })
@@ -263,22 +264,22 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }, { id: 2 }])
     expect(settings).toEqual({})
   })
@@ -290,22 +291,22 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }, { id: 2 }])
     expect(settings).toEqual({})
   })
@@ -319,70 +320,46 @@ describe.skip('Test API configurations', () => {
       },
     })
 
-    const apiName = 'restaurant'
-    const contentTypeServices = createContentTypeService({
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
-    const indexName = contentTypeServices.getIndexNameOfCollection({
-      apiName,
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
     })
-    const entries = contentTypeServices.transformEntries({
-      apiName,
+    const entries = meilisearchService.transformEntries({
+      collection,
       entries: [{ id: 1 }, { id: 2 }],
     })
-    const settings = contentTypeServices.getSettings({
-      apiName,
+    const settings = meilisearchService.getSettings({
+      collection,
     })
 
-    expect(indexName).toEqual(apiName)
+    expect(indexName).toEqual(collection)
     expect(entries).toEqual([{ id: 1 }, { id: 2 }])
     expect(settings).toEqual({
       mySettings: 'hello',
     })
   })
 
-  test('Test fetch all APIs configurations', async () => {
+  test('Test all collections pointing to the same custom index name', async () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
-        settings: {
-          mySettings: 'hello',
-        },
+        indexName: 'my_index',
       },
       aboutConfig: {
-        indexName: 'myIndex',
+        indexName: 'my_index',
       },
     })
 
-    const contentTypeServices = createContentTypeService({
+    const meilisearchService = createMeilisearchService({
       strapi: customStrapi,
     })
 
-    const confs = contentTypeServices.getAllAPIservices()
-
-    expect(confs.map(config => Object.keys(config)[0])).toEqual([
-      'restaurant',
-      'about',
-    ])
-  })
-
-  test('Test fetch one API configuration', async () => {
-    const customStrapi = createFakeStrapi({
-      restaurantConfig: {
-        settings: {
-          mySettings: 'hello',
-        },
-      },
-      aboutConfig: {
-        indexName: 'myIndex',
-      },
+    const collections = meilisearchService.listCollectionsWithCustomIndexName({
+      indexName: 'my_index',
     })
 
-    const contentTypeServices = createContentTypeService({
-      strapi: customStrapi,
-    })
-
-    const apiName = 'restaurant'
-    const conf = contentTypeServices.getAPIServices({ apiName: apiName })
-    expect(Object.keys(conf)[0]).toEqual('meilisearch')
+    expect(collections).toEqual(['restaurant', 'about'])
   })
 })
