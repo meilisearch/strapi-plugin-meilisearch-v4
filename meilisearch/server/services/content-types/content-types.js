@@ -152,7 +152,7 @@ module.exports = ({ strapi }) => ({
    *
    * @param  {string} contentType - Name of the content type.
    *
-   * @returns  {number}
+   * @returns  {number} number of entries in the content type.
    */
   contentTypeExists({ contentType }) {
     return !!Object.keys(strapi.contentTypes).includes(contentType)
