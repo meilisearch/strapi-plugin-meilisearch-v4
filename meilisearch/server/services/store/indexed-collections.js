@@ -58,7 +58,7 @@ module.exports = ({ store }) => ({
   /**
    * Add a collection to the listened collections list.
    *
-   * @param {string[]} collection - Collection name that is being listened.
+   * @param {string} collection - Collection name that is being listened.
    *
    * @returns {Promise<string[]>} - Collection names.
    */
