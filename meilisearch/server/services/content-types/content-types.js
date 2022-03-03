@@ -139,7 +139,6 @@ module.exports = ({ strapi }) => ({
         })) || []
 
       const info = await callback(entries, contentType)
-
       if (Array.isArray(info)) cbResponse.push(...info)
     }
     return cbResponse
