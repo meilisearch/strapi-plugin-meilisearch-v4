@@ -74,7 +74,7 @@ module.exports = ({ strapi }) => ({
       const count = await strapi.db.query(contentTypeUid).count({ where })
       return count
     } catch (e) {
-      console.error(e)
+      strapi.log.warn(e)
       return 0
     }
   },

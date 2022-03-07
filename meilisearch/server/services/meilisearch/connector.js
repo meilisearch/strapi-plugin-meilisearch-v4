@@ -17,7 +17,7 @@ module.exports = ({ strapi, adapter, config }) => {
         const indexes = await client.getIndexes()
         return indexes
       } catch (e) {
-        console.error(e)
+        strapi.log.warn(e)
         return []
       }
     },
@@ -28,15 +28,20 @@ module.exports = ({ strapi, adapter, config }) => {
      * @param  {object} options
      * @param  {string} options.collection - Collection name.
      * @param  {number[]} options.entriesId - Entries id.
+     *
+     * @returns  { Promise<import("meilisearch").Task>} p - Task body returned by Meilisearch API.
      */
     deleteEntriesFromMeiliSearch: async function ({ collection, entriesId }) {
       const { apiKey, host } = await store.getCredentials()
       const client = MeiliSearch({ apiKey, host })
-      const indexUid = config.getIndexNameOfCollection(collection)
+
+      const indexUid = config.getIndexNameOfCollection({ collection })
+      console.log({ indexUid, collection })
       const documentsIds = entriesId.map(entryId =>
         adapter.addCollectionPrefixToId({ entryId, collection })
       )
-      await client.index(indexUid).deleteDocuments(documentsIds)
+
+      return await client.index(indexUid).deleteDocuments(documentsIds)
     },
 
     /**
@@ -52,14 +57,14 @@ module.exports = ({ strapi, adapter, config }) => {
       try {
         const { apiKey, host } = await store.getCredentials()
         const client = MeiliSearch({ apiKey, host })
-        const indexUid = config.getIndexNameOfCollection(collection)
+        const indexUid = config.getIndexNameOfCollection({ collection })
         const task = await client
           .index(indexUid)
           .waitForTask(taskUid, { intervalMs: 5000 })
 
         return task
       } catch (e) {
-        console.error(e)
+        strapi.log.warn(e)
         return 0
       }
     },
@@ -90,7 +95,7 @@ module.exports = ({ strapi, adapter, config }) => {
      *
      * @returns { Promise<Record<string, number[]> | {}> } - Collections with their respective task uids
      */
-    getTaskUids: async function () {
+    getEnqueuedTaskUids: async function () {
       const indexes = await this.getIndexes()
       const indexUids = indexes.map(index => index.uid)
       const collections = contentType.getContentTypesName()
@@ -98,13 +103,14 @@ module.exports = ({ strapi, adapter, config }) => {
       const client = MeiliSearch({ apiKey, host })
 
       const collectionTaskUids = {}
+      const { results: tasks } = await client.getTasks()
       for (const collection of collections) {
-        const indexUid = config.getIndexNameOfCollection(collection)
+        const indexUid = config.getIndexNameOfCollection({ collection })
         if (indexUids.includes(indexUid)) {
-          const { results: tasks } = await client.index(indexUid).getTasks()
-
           const enqueueded = tasks
-            .filter(task => task.status === 'enqueued')
+            .filter(
+              task => task.status === 'enqueued' && task.indexUid === indexUid
+            )
             .map(task => task.uid)
           collectionTaskUids[collection] = enqueueded
         }

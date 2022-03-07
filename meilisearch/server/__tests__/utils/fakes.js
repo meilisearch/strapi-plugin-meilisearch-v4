@@ -1,9 +1,5 @@
 const defaultContentTypes = require('./content-types-list')
 
-const apis = {
-  restaurant: 'restaurant',
-  about: 'about',
-}
 /**
  * @param {object} config
  * @param  {object} [config.restaurantConfig]
@@ -23,6 +19,12 @@ function createFakeStrapi({
 
   const fakePluginService = jest.fn(() => ({
     getContentTypesName: () => ['restaurant', 'about'],
+    getCredentials: () => ({
+      host: 'http://localhost:7700',
+      apiKey: 'masterKey',
+      ApiKeyIsFromConfigFile: true,
+      HostIsFromConfigFile: true,
+    }),
   }))
 
   const fakeLogger = {
@@ -69,5 +71,4 @@ function createFakeStrapi({
 
 module.exports = {
   createFakeStrapi,
-  apis,
 }
