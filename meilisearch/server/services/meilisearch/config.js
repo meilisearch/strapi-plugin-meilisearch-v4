@@ -84,7 +84,7 @@ module.exports = ({ strapi }) => {
       try {
         if (
           Array.isArray(entries) &&
-          typeof collectionConfig?.filterEntries === 'function'
+          typeof collectionConfig?.filterEntry === 'function'
         ) {
           const filtered = entries.filter(entry =>
             collectionConfig.filterEntry({

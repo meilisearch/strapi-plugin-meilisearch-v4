@@ -201,6 +201,39 @@ describe('Test Meilisearch plugin configurations', () => {
     expect(settings).toEqual({})
   })
 
+  test('Test configuration with correct filterEntry ', async () => {
+    const customStrapi = createFakeStrapi({
+      restaurantConfig: {
+        filterEntry: ({ entry }) => {
+          return entry.id !== 1
+        },
+      },
+    })
+
+    const collection = 'restaurant'
+    const meilisearchService = createMeilisearchService({
+      strapi: customStrapi,
+    })
+    const indexName = meilisearchService.getIndexNameOfCollection({
+      collection,
+    })
+    const entries = meilisearchService.filterEntries({
+      collection,
+      entries: [
+        { id: 1, name: 'one' },
+        { id: 2, name: 'two' },
+      ],
+    })
+
+    const settings = meilisearchService.getSettings({
+      collection,
+    })
+
+    expect(indexName).toEqual(collection)
+    expect(entries).toEqual([{ id: 2, name: 'two' }])
+    expect(settings).toEqual({})
+  })
+
   test('Test configuration with throwing transformEntry ', async () => {
     const customStrapi = createFakeStrapi({
       restaurantConfig: {
