@@ -85,11 +85,11 @@ describe('Tests content types', () => {
       strapi: fakeStrapi,
     })
 
-    const exists = contentTypeServices.contentTypeExists({
+    const exists = contentTypeServices.getContentTypeUid({
       contentType: 'api::restaurant.restaurant',
     })
 
-    expect(exists).toEqual(true)
+    expect(exists).toEqual('api::restaurant.restaurant')
   })
 
   test('Test number of entries', async () => {

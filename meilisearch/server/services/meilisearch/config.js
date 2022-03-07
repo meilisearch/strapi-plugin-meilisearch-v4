@@ -1,5 +1,20 @@
 'use strict'
 const { isObject } = require('../../../utils')
+/**
+ * Log an error message on a failed action on a collection.
+ *
+ * @param  {object} options
+ * @param  {String} options.collection - Name of the collection.
+ * @param  {String} options.action - Action that failed.
+ *
+ * @returns {[]}
+ */
+const aborted = ({ collection, action }) => {
+  strapi.log.error(
+    `Indexing of ${collection} aborted as the data could not be ${action}`
+  )
+  return [] // return empty array to avoid indexing entries that might contain sensitive data
+}
 
 module.exports = ({ strapi }) => {
   const meilisearchConfig = strapi.config.get('plugin.meilisearch') || {}
@@ -19,7 +34,7 @@ module.exports = ({ strapi }) => {
     /**
      * Transform collections entries before indexation in MeiliSearch.
      *
-     * @param {object} options - Collection name.
+     * @param {object} options
      * @param {string} options.collection - Collection name.
      * @param {Array<Object>} options.entries  - The data to convert. Conversion will use
      * the static method `toSearchIndex` defined in the model definition
@@ -28,13 +43,6 @@ module.exports = ({ strapi }) => {
      */
     transformEntries: function ({ collection, entries = [] }) {
       const apiConfig = meilisearchConfig[collection] || {}
-
-      const aborted = () => {
-        strapi.log.error(
-          'Indexing of ${collection} aborted as the data could not be transformed'
-        )
-        return [] // return empty array to avoid indexing entries that might contain sensitive data
-      }
 
       try {
         if (
@@ -49,16 +57,48 @@ module.exports = ({ strapi }) => {
           )
 
           if (transformed.length > 0 && !isObject(transformed[0])) {
-            return aborted()
+            return aborted({ collection, action: 'transformed' })
           }
-
           return transformed
         }
       } catch (e) {
         strapi.log.error(e)
-        return aborted()
+        return aborted({ collection, action: 'transformed' })
       }
+      return entries
+    },
 
+    /**
+     * Filter collections entries before indexation in MeiliSearch.
+     *
+     * @param {object} options
+     * @param {string} options.collection - Collection name.
+     * @param {Array<Object>} options.entries  - The data to convert. Conversion will use
+     * the static method `toSearchIndex` defined in the model definition
+     *
+     * @return {Array<Object>} - Converted or mapped data
+     */
+    filterEntries: function ({ collection, entries = [] }) {
+      const collectionConfig = meilisearchConfig[collection] || {}
+
+      try {
+        if (
+          Array.isArray(entries) &&
+          typeof collectionConfig?.filterEntries === 'function'
+        ) {
+          const filtered = entries.filter(entry =>
+            collectionConfig.filterEntry({
+              entry,
+              collection,
+            })
+          )
+
+          return filtered
+        }
+      } catch (e) {
+        strapi.log.error(e)
+        return aborted({ collection, action: 'filtered' })
+      }
       return entries
     },
 
@@ -89,14 +129,17 @@ module.exports = ({ strapi }) => {
      * @returns {string[]} List of collections storing its data in the provided indexName
      */
     listCollectionsWithCustomIndexName: function ({ indexName }) {
+      // console.log({ indexName })
       const contentTypes =
         strapi
           .plugin('meilisearch')
-          .service('contentTypes')
+          .service('contentType')
           .getContentTypesName() || []
 
+      // console.log(contentTypes)
       const contentTypeWithIndexName = contentTypes.filter(contentType => {
         const name = this.getIndexNameOfCollection({ collection: contentType })
+        // console.log(name)
         return name === indexName
       })
       return contentTypeWithIndexName
