@@ -281,10 +281,10 @@ module.exports = ({ strapi, adapter, config }) => {
         return task.uid
       }
 
-      const tasksUids = await contentType.actionInBatches(
+      const tasksUids = await contentType.actionInBatches({
         collection,
-        addDocuments
-      )
+        callback: addDocuments,
+      })
 
       await store.addIndexedCollection(collection)
 
@@ -335,7 +335,10 @@ module.exports = ({ strapi, adapter, config }) => {
             entriesId: entries.map(entry => entry.id),
           })
         }
-        await contentType.actionInBatches(collection, deleteEntries)
+        await contentType.actionInBatches({
+          collection,
+          callback: deleteEntries,
+        })
       } else {
         const { apiKey, host } = await store.getCredentials()
         const client = MeiliSearch({ apiKey, host })

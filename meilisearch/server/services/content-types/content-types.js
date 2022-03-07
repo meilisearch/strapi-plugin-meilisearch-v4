@@ -153,6 +153,7 @@ module.exports = ({ strapi }) => ({
   actionInBatches: async function ({ collection, callback = () => {} }) {
     const BATCH_SIZE = 500
     const contentType = collection
+
     // Need total number of entries in collection
     const entries_count = await this.numberOfEntries({
       contentType,

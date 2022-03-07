@@ -151,8 +151,8 @@ describe('Tests content types', () => {
 
     const contentType = 'api::restaurant.restaurant'
     const entries = await contentTypeServices.actionInBatches({
-      contentType,
-      callback: (entries, contentType) =>
+      collection: contentType,
+      callback: ({ entries, contentType }) =>
         entries.map(entry => ({
           id: entry.id + 1,
           contentType,
@@ -170,7 +170,7 @@ describe('Tests content types', () => {
 
     const contentType = 'api::restaurant.restaurant'
     const entries = await contentTypeServices.actionInBatches({
-      contentType,
+      collection: contentType,
       callback: () => {},
     })
 
