@@ -129,17 +129,14 @@ module.exports = ({ strapi }) => {
      * @returns {string[]} List of collections storing its data in the provided indexName
      */
     listCollectionsWithCustomIndexName: function ({ indexName }) {
-      // console.log({ indexName })
       const contentTypes =
         strapi
           .plugin('meilisearch')
           .service('contentType')
           .getContentTypesName() || []
 
-      // console.log(contentTypes)
       const contentTypeWithIndexName = contentTypes.filter(contentType => {
         const name = this.getIndexNameOfCollection({ collection: contentType })
-        // console.log(name)
         return name === indexName
       })
       return contentTypeWithIndexName

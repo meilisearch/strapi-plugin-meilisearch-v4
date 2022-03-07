@@ -36,7 +36,6 @@ module.exports = ({ strapi, adapter, config }) => {
       const client = MeiliSearch({ apiKey, host })
 
       const indexUid = config.getIndexNameOfCollection({ collection })
-      console.log({ indexUid, collection })
       const documentsIds = entriesId.map(entryId =>
         adapter.addCollectionPrefixToId({ entryId, collection })
       )
@@ -188,7 +187,6 @@ module.exports = ({ strapi, adapter, config }) => {
           const collectionsWithSameIndexUid = await config.listCollectionsWithCustomIndexName(
             { indexName: indexUid }
           )
-          // console.log({ collectionsWithSameIndexUid })
           const numberOfEntries = await contentType.totalNumberOfEntries({
             contentTypes: collectionsWithSameIndexUid,
           })

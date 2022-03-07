@@ -22,8 +22,6 @@ module.exports = ({ store }) => ({
    * @returns {Promise<string[]>} List of collections indexed in Meilisearch.
    */
   setIndexedCollections: async function ({ collections }) {
-    console.log({ collections })
-
     return store.setStoreKey({
       key: 'meilisearch_indexed_collections',
       value: collections,
