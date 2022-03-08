@@ -9,7 +9,6 @@ module.exports = ({ strapi }) => {
      *
      * @param  {object} ctx - Http request object.
      *
-     * @returns {{ data: object[] }} - List of collections reports.
      */
     async getCollections(ctx) {
       const collections = await meilisearch.getCollectionsReport()
@@ -21,7 +20,6 @@ module.exports = ({ strapi }) => {
      *
      * @param  {object} ctx - Http request object.
      *
-     * @returns {{ data: number[] }} - All task uids from the batched indexation process.
      */
     async addCollection(ctx) {
       const { collection } = ctx.request.body
@@ -36,7 +34,6 @@ module.exports = ({ strapi }) => {
      *
      * @param  {object} ctx - Http request object.
      *
-     * @returns {{ data: object }} - All tasks uid from the indexation process.
      */
     async updateCollection(ctx) {
       const { collection } = ctx.request.body
@@ -49,10 +46,8 @@ module.exports = ({ strapi }) => {
     /**
      * Remove or empty a collection from Meilisearch
      *
-     * @param  {object} options
-     * @param  {string} options.collection - Collection name.
+     * @param  {object} ctx - Http request object.
      *
-     * @returns {{data: 'ok'}} - All tasks uid from the indexation process.
      */
     async removeCollection(ctx) {
       const { collection } = ctx.request.body

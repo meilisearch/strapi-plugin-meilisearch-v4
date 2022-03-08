@@ -9,7 +9,6 @@ module.exports = ({ strapi }) => {
      *
      * @param  {object} ctx - Http request object.
      *
-     * @returns  { data: Promise<(import("meilisearch").Task| number)[]> } p - Task body returned by Meilisearch API.
      */
     async waitForTasks(ctx) {
       const { collection } = ctx.params
@@ -18,19 +17,18 @@ module.exports = ({ strapi }) => {
         taskUids,
         collection,
       })
-      return { data: tasks }
+
+      ctx.body = { data: tasks }
     },
 
     /**
      * Get all the tasks with an enqueued status of the collections that
      * are indexed in Meilisearch.
-     *
-     * @returns { data: number[] }
      */
-    async getEnqueuedTaskUids() {
+    async getEnqueuedTaskUids(ctx) {
       const taskUids = await meilisearch.getEnqueuedTaskUids()
 
-      return { data: taskUids }
+      ctx.body = { data: taskUids }
     },
   }
 }
