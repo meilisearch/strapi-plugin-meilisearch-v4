@@ -4,24 +4,26 @@
  *
  */
 
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import pluginId from '../../pluginId'
 import { request } from '@strapi/helper-plugin'
+import Collection from '../Collection'
+import PluginTabs from '../PluginTabs'
+import PluginHeader from '../PluginHeader'
+
+// function useCollectionUpdate() {
+//   const [isOnline, setIsOnline] = useState(null)
+
+//   setIsOnline(prev => !!prev)
+//   return isOnline
+// }
 
 const HomePage = () => {
-  async function callController() {
-    const response = await request(`/${pluginId}/model/`, {
-      method: 'GET',
-    })
-    console.log(response)
-  }
-  useEffect(() => {
-    callController()
-  }, [])
   return (
     <div>
       <h1>{pluginId}&apos;s HomePage</h1>
-      <p>Happy coding</p>
+      <PluginHeader />
+      <PluginTabs />
     </div>
   )
 }
