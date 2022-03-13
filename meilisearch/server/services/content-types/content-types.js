@@ -159,7 +159,6 @@ module.exports = ({ strapi }) => ({
       contentType,
     })
     const cbResponse = []
-
     for (let index = 0; index <= entries_count; index += BATCH_SIZE) {
       const entries =
         (await this.getContentTypeEntries({
@@ -168,7 +167,7 @@ module.exports = ({ strapi }) => ({
           contentType,
         })) || []
 
-      const info = await callback({ entries, contentType })
+      const info = await callback({ entries, collection })
       if (Array.isArray(info)) cbResponse.push(...info)
     }
     return cbResponse

@@ -30,6 +30,8 @@ module.exports = () => {
      * @returns {object[]} - Formatted entries.
      */
     addCollectionPrefixToIdOfEntries: function ({ collection, entries }) {
+      // console.log(collection, entries)
+
       return entries.map(entry => ({
         ...entry,
         id: this.addCollectionPrefixToId({ entryId: entry.id, collection }),

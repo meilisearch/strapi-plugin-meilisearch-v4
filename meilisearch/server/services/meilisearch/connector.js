@@ -4,6 +4,7 @@ const MeiliSearch = require('./client')
 module.exports = ({ strapi, adapter, config }) => {
   const store = strapi.plugin('meilisearch').service('store')
   const contentType = strapi.plugin('meilisearch').service('contentType')
+
   return {
     /**
      * Get indexes with a safe guard in case of error.
@@ -172,7 +173,7 @@ module.exports = ({ strapi, adapter, config }) => {
 
           const indexInMeiliSearch = indexUids.includes(indexUid)
           const collectionInIndexStore = indexedCollections.includes(collection)
-          const indexed = indexInMeiliSearch && collectionInIndexStore
+          const indexed = indexInMeiliSearch
 
           // safe guard in case index does not exist anymore in Meilisearch
           if (!indexInMeiliSearch && collectionInIndexStore) {
@@ -182,7 +183,9 @@ module.exports = ({ strapi, adapter, config }) => {
           const {
             numberOfDocuments = 0,
             isIndexing = false,
-          } = indexUids.includes(indexUid) ? await this.getStats(indexUid) : {}
+          } = indexUids.includes(indexUid)
+            ? await this.getStats({ indexUid })
+            : {}
 
           const collectionsWithSameIndexUid = await config.listCollectionsWithCustomIndexName(
             { indexName: indexUid }
@@ -202,6 +205,7 @@ module.exports = ({ strapi, adapter, config }) => {
           }
         })
       )
+
       return { collections: reports }
     },
 
@@ -254,14 +258,14 @@ module.exports = ({ strapi, adapter, config }) => {
     addCollectionInMeiliSearch: async function ({ collection }) {
       const { apiKey, host } = await store.getCredentials()
       const client = MeiliSearch({ apiKey, host })
-      const indexUid = config.getIndexNameOfCollection(collection)
+      const indexUid = config.getIndexNameOfCollection({ collection })
 
       // Get Meilisearch Index settings from model
       const settings = config.getSettings(collection)
       await client.index(indexUid).updateSettings(settings)
 
       // Callback function for batching action
-      const addDocuments = async (entries, collection) => {
+      const addDocuments = async ({ entries, collection }) => {
         if (entries.length === 0) {
           const task = await client.createIndex(indexUid)
           return task.uid

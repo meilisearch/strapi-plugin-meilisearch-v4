@@ -25,7 +25,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/collection/:collection',
+    path: '/collection',
     handler: 'collectionController.updateCollection',
     config: {},
   },

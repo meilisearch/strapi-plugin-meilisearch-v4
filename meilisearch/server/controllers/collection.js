@@ -23,7 +23,9 @@ module.exports = ({ strapi }) => {
      */
     async addCollection(ctx) {
       const { collection } = ctx.request.body
-      const collections = await store.updateCollectionInMeiliSearch({
+      // console.log({ collection })
+
+      const collections = await meilisearch.updateCollectionInMeiliSearch({
         collection,
       })
       ctx.body = { data: collections }
@@ -37,7 +39,7 @@ module.exports = ({ strapi }) => {
      */
     async updateCollection(ctx) {
       const { collection } = ctx.request.body
-      const updateCollection = await store.updateCollectionInMeiliSearch({
+      const updateCollection = await meilisearch.updateCollectionInMeiliSearch({
         collection,
       })
       ctx.body = { data: updateCollection }
@@ -50,8 +52,9 @@ module.exports = ({ strapi }) => {
      *
      */
     async removeCollection(ctx) {
-      const { collection } = ctx.request.body
-      await store.removeCollectionFromMeiliSearch({
+      const { collection } = ctx.request.params
+
+      await meilisearch.removeCollectionFromMeiliSearch({
         collection,
       })
       ctx.body = { data: 'ok' }

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { Box } from '@strapi/design-system/Box'
 import {
   Tabs,
@@ -7,7 +7,7 @@ import {
   TabPanels,
   TabPanel,
 } from '@strapi/design-system/Tabs'
-import Collection from '../Collection'
+import { CollectionTable } from '../Collection'
 
 const PluginTabs = () => {
   useEffect(() => {})
@@ -25,7 +25,7 @@ const PluginTabs = () => {
         <TabPanels>
           <TabPanel>
             <Box color="neutral800" padding={4} background="neutral0">
-              <Collection />
+              <CollectionTable />
             </Box>
           </TabPanel>
           <TabPanel>

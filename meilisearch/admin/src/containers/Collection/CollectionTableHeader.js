@@ -15,10 +15,10 @@ const CollectionTableHeader = () => {
           <Typography variant="sigma">NAME</Typography>
         </Th>
         <Th>
-          <Typography variant="sigma">IN MEILISEARCH</Typography>
+          <Typography variant="sigma">IN MEILISEARCH ?</Typography>
         </Th>
         <Th>
-          <Typography variant="sigma">INDEXING</Typography>
+          <Typography variant="sigma">INDEXING ?</Typography>
         </Th>
         <Th>
           <Typography variant="sigma">INDEX NAME</Typography>

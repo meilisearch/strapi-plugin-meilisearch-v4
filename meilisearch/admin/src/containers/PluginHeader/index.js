@@ -9,9 +9,6 @@ import { BaseHeaderLayout } from '@strapi/design-system/Layout'
 import useCollectionReloader from '../Hooks/useCollectionReloader'
 
 const PluginHeader = () => {
-  const { setIsOnline, isOnline } = useCollectionReloader()
-  // console.log({ isOnline })
-
   return (
     <Box background="neutral100">
       <BaseHeaderLayout
@@ -19,11 +16,6 @@ const PluginHeader = () => {
           <Link startIcon={<ArrowLeft />} to="/">
             Go back
           </Link>
-        }
-        primaryAction={
-          <Button onClick={() => setIsOnline(prev => !prev)}>
-            Default button
-          </Button>
         }
         title="Meilisearch"
         subtitle="strapi-plugin-meilisearch"

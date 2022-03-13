@@ -7,28 +7,27 @@ import { Flex } from '@strapi/design-system/Flex'
 import { IconButton } from '@strapi/design-system/IconButton'
 import Pencil from '@strapi/icons/Pencil'
 import { Box } from '@strapi/design-system/Box'
+import { Button } from '@strapi/design-system/Button'
 import Trash from '@strapi/icons/Trash'
-// import useCollectionReloader from '../Hooks/useCollectionReloader'
+import useCollectionReloader from '../Hooks/useCollectionReloader'
 
-const hookingTextRendering = ({ entry }) => {
-  const { indexed, listened } = entry
-  if (indexed && !listened) return 'Reload needed'
-  if (indexed && listened) return 'Hooked'
-  if (!indexed && listened) return 'Reload needed'
-  if (!indexed && !listened) return '/'
-}
-
-const CollectionColumn = ({ entry }) => {
-  const [val, setValue] = useState(false)
-  console.log('Collect column')
-
+const CollectionColumn = ({
+  entry,
+  deleteCollection,
+  addCollection,
+  updateCollection,
+}) => {
   return (
     <Tr key={entry.id}>
       <Td>
         <BaseCheckbox
           aria-label={`Select ${entry.collection}`}
-          onValueChange={value => setValue(value)}
-          value={val}
+          onValueChange={() => {
+            if (entry.indexed)
+              deleteCollection({ collection: entry.collection })
+            else addCollection({ collection: entry.collection })
+          }}
+          value={entry.indexed}
         />
       </Td>
       {/* // Name */}
@@ -59,25 +58,18 @@ const CollectionColumn = ({ entry }) => {
       </Td>
       {/* // HOOKS */}
       <Td>
-        <Typography textColor="neutral800">
-          {hookingTextRendering({ entry })}
-        </Typography>
+        <Typography textColor="neutral800">{entry.reloadNeeded}</Typography>
       </Td>
       <Td>
         <Flex>
-          <IconButton
-            onClick={() => console.log('edit')}
-            label="Edit"
-            noBorder
-            icon={<Pencil />}
-          />
           <Box paddingLeft={1}>
-            <IconButton
-              onClick={() => console.log('delete')}
-              label="Delete"
-              noBorder
-              icon={<Trash />}
-            />
+            <Button
+              onClick={() => updateCollection({ collection: entry.collection })}
+              size="S"
+              variant="secondary"
+            >
+              Update
+            </Button>
           </Box>
         </Flex>
       </Td>
