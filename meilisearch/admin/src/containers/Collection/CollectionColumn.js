@@ -18,14 +18,14 @@ const CollectionColumn = ({
   updateCollection,
 }) => {
   return (
-    <Tr key={entry.id}>
+    <Tr key={entry.contentType}>
       <Td>
         <BaseCheckbox
           aria-label={`Select ${entry.collection}`}
           onValueChange={() => {
             if (entry.indexed)
-              deleteCollection({ collection: entry.collection })
-            else addCollection({ collection: entry.collection })
+              deleteCollection({ contentType: entry.contentType })
+            else addCollection({ contentType: entry.contentType })
           }}
           value={entry.indexed}
         />
@@ -64,7 +64,9 @@ const CollectionColumn = ({
         <Flex>
           <Box paddingLeft={1}>
             <Button
-              onClick={() => updateCollection({ collection: entry.collection })}
+              onClick={() =>
+                updateCollection({ contentType: entry.contentType })
+              }
               size="S"
               variant="secondary"
             >

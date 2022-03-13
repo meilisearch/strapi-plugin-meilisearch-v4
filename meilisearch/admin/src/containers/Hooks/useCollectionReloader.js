@@ -36,11 +36,11 @@ export function useCollectionReloader() {
     setRefetchIndex(prevRefetchIndex => !prevRefetchIndex)
 
   const fetchCollections = async () => {
-    const data = await request(`/${pluginId}/collection/`, {
+    const data = await request(`/${pluginId}/content-type/`, {
       method: 'GET',
     })
 
-    const collections = data.data.collections.map(collection => {
+    const collections = data.data.contentTypes.map(collection => {
       collection['reloadNeeded'] = hookingTextRendering({
         indexed: collection.indexed,
         listened: collection.listened,
@@ -54,33 +54,33 @@ export function useCollectionReloader() {
     setCollections(collections)
   }
 
-  const deleteCollection = async ({ collection }) => {
-    await request(`/${pluginId}/collection/${collection}`, {
+  const deleteCollection = async ({ contentType }) => {
+    await request(`/${pluginId}/content-type/${contentType}`, {
       method: 'DELETE',
     })
-    console.log('Delete collection')
+    console.log('Delete contentType')
     refetchCollection()
   }
 
-  const addCollection = async ({ collection }) => {
-    await request(`/${pluginId}/collection`, {
+  const addCollection = async ({ contentType }) => {
+    await request(`/${pluginId}/content-type`, {
       method: 'POST',
       body: {
-        collection,
+        contentType,
       },
     })
-    console.log('Add collection')
+    console.log('Add contentType')
     refetchCollection()
   }
 
-  const updateCollection = async ({ collection }) => {
-    await request(`/${pluginId}/collection`, {
+  const updateCollection = async ({ contentType }) => {
+    await request(`/${pluginId}/content-type`, {
       method: 'PUT',
       body: {
-        collection,
+        contentType,
       },
     })
-    console.log('Update collection')
+    console.log('Update contentType')
     refetchCollection()
   }
 
