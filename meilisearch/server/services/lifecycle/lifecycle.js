@@ -11,22 +11,35 @@ module.exports = ({ strapi }) => {
       strapi.db.lifecycles.subscribe({
         models: [contentTypeUid], // Add all the models a user wants to index in Meilisearch,
         afterCreate(event) {
-          const { result, params } = event
+          const { params } = event
           let data = params.data
-          console.log({ result, params })
-          // const meilisearch = strapi
-          //   .plugin('meilisearch')
-          //   .service('meilisearch')
-          if (!Array.isArray(data)) data = [data]
-          console.log({ contentTypeUid })
+          const meilisearch = strapi
+            .plugin('meilisearch')
+            .service('meilisearch')
 
-          // meilisearch.addOneEntryInMeiliSearch({ contentType: })
+          if (!Array.isArray(data)) data = [data]
+          meilisearch.addMultipleEntriesToMeilisearch({
+            contentType: contentTypeUid,
+            entries: data,
+          })
           console.log('afterCreate')
         },
-        afterCreateMany() {
+        afterCreateMany(event) {
+          const { params } = event
+          let data = params.data
+          const meilisearch = strapi
+            .plugin('meilisearch')
+            .service('meilisearch')
+
+          if (!Array.isArray(data)) data = [data]
+          meilisearch.addMultipleEntriesToMeilisearch({
+            contentType: contentTypeUid,
+            entries: data,
+          })
           console.log('afterCreateMany')
         },
         afterUpdate() {
+          // Todo apply filter rules to remove
           console.log('afterUpdate')
         },
         afterUpdateMany() {
