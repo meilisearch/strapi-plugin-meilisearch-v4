@@ -22,7 +22,9 @@ export const reloadServer = async () => {
       true
     )
     window.location.reload()
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 export function useCollectionReloader() {
@@ -30,7 +32,7 @@ export function useCollectionReloader() {
   const [collections, setCollections] = useState([])
   const [refetchIndex, setRefetchIndex] = useState(true)
   const [reloadNeeded, setReloadNeeded] = useState(false)
-  const [collectionInWaitMode, setCollectionInWaitMode] = useState([]) // Collections that are waiting for their indexation to complete.
+  // const [collectionInWaitMode, setCollectionInWaitMode] = useState([]) // Collections that are waiting for their indexation to complete.
 
   const refetchCollection = () =>
     setRefetchIndex(prevRefetchIndex => !prevRefetchIndex)

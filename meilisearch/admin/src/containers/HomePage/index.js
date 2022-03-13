@@ -4,9 +4,8 @@
  *
  */
 
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
 import pluginId from '../../pluginId'
-import { request } from '@strapi/helper-plugin'
 import PluginTabs from '../PluginTabs'
 import PluginHeader from '../PluginHeader'
 

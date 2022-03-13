@@ -14,9 +14,9 @@ module.exports = ({ strapi }) => {
           const { result, params } = event
           let data = params.data
           console.log({ result, params })
-          const meilisearch = strapi
-            .plugin('meilisearch')
-            .service('meilisearch')
+          // const meilisearch = strapi
+          //   .plugin('meilisearch')
+          //   .service('meilisearch')
           if (!Array.isArray(data)) data = [data]
           console.log({ contentTypeUid })
 

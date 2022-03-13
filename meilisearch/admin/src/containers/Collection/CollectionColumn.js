@@ -1,15 +1,10 @@
-import React, { memo, useState, useEffect } from 'react'
-import { Table, Thead, Tbody, Tr, Td, Th } from '@strapi/design-system/Table'
+import React, { memo } from 'react'
+import { Tr, Td } from '@strapi/design-system/Table'
 import { BaseCheckbox } from '@strapi/design-system/BaseCheckbox'
 import { Typography } from '@strapi/design-system/Typography'
-import { Avatar, AvatarGroup } from '@strapi/design-system/Avatar'
 import { Flex } from '@strapi/design-system/Flex'
-import { IconButton } from '@strapi/design-system/IconButton'
-import Pencil from '@strapi/icons/Pencil'
 import { Box } from '@strapi/design-system/Box'
 import { Button } from '@strapi/design-system/Button'
-import Trash from '@strapi/icons/Trash'
-import useCollectionReloader from '../Hooks/useCollectionReloader'
 
 const CollectionColumn = ({
   entry,

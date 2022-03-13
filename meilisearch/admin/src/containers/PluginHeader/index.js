@@ -1,12 +1,8 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo } from 'react'
 import ArrowLeft from '@strapi/icons/ArrowLeft'
-import Pencil from '@strapi/icons/Pencil'
-import Plus from '@strapi/icons/Plus'
-import { Button } from '@strapi/design-system/Button'
 import { Box } from '@strapi/design-system/Box'
 import { Link } from '@strapi/design-system/Link'
 import { BaseHeaderLayout } from '@strapi/design-system/Layout'
-import useCollectionReloader from '../Hooks/useCollectionReloader'
 
 const PluginHeader = () => {
   return (
