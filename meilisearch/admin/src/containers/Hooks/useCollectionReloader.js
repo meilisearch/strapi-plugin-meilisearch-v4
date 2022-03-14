@@ -34,7 +34,7 @@ export function useCollectionReloader() {
       return collection
     })
     const reload = collections.find(col => col.reloadNeeded === 'Reload needed')
-    console.log({ reload })
+
     if (reload) {
       setReloadNeeded(true)
     } else setReloadNeeded(false)
