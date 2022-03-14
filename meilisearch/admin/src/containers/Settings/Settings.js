@@ -6,7 +6,7 @@ import PluginActions from './PluginActions'
 
 const Settings = () => {
   return (
-    <Box background="neutral100" padding={10}>
+    <Box padding={5}>
       <Credentials />
       <Box padding={2}>
         <Divider background="neutral200" />

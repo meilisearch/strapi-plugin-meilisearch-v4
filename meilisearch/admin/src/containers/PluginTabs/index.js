@@ -13,7 +13,7 @@ import { Settings } from '../Settings'
 const PluginTabs = () => {
   useEffect(() => {})
   return (
-    <Box padding={8} margin={10}>
+    <Box padding={8} margin={10} background="neutral">
       <TabGroup
         label="Some stuff for the label"
         id="tabs"

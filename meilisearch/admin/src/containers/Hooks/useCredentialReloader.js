@@ -42,7 +42,6 @@ export function useCredentialReloader() {
 
   return {
     credentials,
-    setCredentials,
     updateCredentials,
     setHost,
     setApiKey,
