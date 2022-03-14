@@ -10,27 +10,11 @@ const hookingTextRendering = ({ indexed, listened }) => {
   if (!indexed && !listened) return '/'
 }
 
-/**
- * Reload request of the server.
- */
-
 export function useCollection() {
   const [collections, setCollections] = useState([])
   const [refetchIndex, setRefetchIndex] = useState(true)
   const [reloadNeeded, setReloadNeeded] = useState(false)
   const [realTimeReports, setRealTimeReports] = useState(false)
-
-  useEffect(() => {
-    let interval
-    if (realTimeReports) {
-      interval = setInterval(() => {
-        refetchCollection()
-      }, 1000)
-    } else {
-      clearInterval(interval)
-    }
-    return () => clearInterval(interval)
-  }, [realTimeReports])
 
   const { handleNotification } = useAlert()
 
@@ -129,6 +113,19 @@ export function useCollection() {
   useEffect(() => {
     fetchCollections()
   }, [refetchIndex])
+
+  // Start refreshing the collections when a collection is being indexed
+  useEffect(() => {
+    let interval
+    if (realTimeReports) {
+      interval = setInterval(() => {
+        refetchCollection()
+      }, 1000)
+    } else {
+      clearInterval(interval)
+    }
+    return () => clearInterval(interval)
+  }, [realTimeReports])
 
   return {
     collections,
