@@ -16,7 +16,7 @@ module.exports = ({ store }) => ({
   /**
    * Set listened contentTypes to the store.
    * @param  {object} options
-   * @param  {string[]} options.contentTypes
+   * @param  {string[]} [options.contentTypes]
    *
    * @returns {Promise<string[]>} - ContentType names.
    */
@@ -57,6 +57,17 @@ module.exports = ({ store }) => ({
     for (const contentType of contentTypes) {
       await this.addListenedContentType({ contentType })
     }
+    return this.getListenedContentTypes()
+  },
+
+  /**
+   * Add multiple contentTypes to the listened contentTypes list.
+   *
+   * @returns {Promise<string[]>} - ContentType names.
+   */
+  emptyListenedContentTypes: async function () {
+    const empty = await this.setListenedContentTypes({})
+    console.log({ empty })
     return this.getListenedContentTypes()
   },
 })

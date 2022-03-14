@@ -9,14 +9,13 @@ module.exports = ({ strapi }) => {
      * @param  {object} options
      * @param  {string} options.contentType
      *
-     * @returns {void}
+     * @returns {Promise<object>}
      */
     async subscribeContentType({ contentType }) {
       const contentTypeUid = contentTypeService.getContentTypeUid({
         contentType: contentType,
       })
-
-      strapi.db.lifecycles.subscribe({
+      await strapi.db.lifecycles.subscribe({
         models: [contentTypeUid],
         afterCreate(event) {
           console.log('AFTER CREATE')
@@ -99,33 +98,10 @@ module.exports = ({ strapi }) => {
           )
         },
       })
-      await store.addListenedContentType({ contentType: contentTypeUid })
-    },
 
-    /**
-     * Unsubscribe the content type from all the lifecycles used
-     *
-     * @param  {object} options
-     * @param  {string} options.contentType
-     *
-     * @returns {void}
-     */
-    unsubscribeContentType({ contentType }) {
-      const contentTypeUid = contentTypeService.getContentTypeUid({
-        contentType: contentType,
+      return store.addListenedContentType({
+        contentType: contentTypeUid,
       })
-      console.log('UNSUBSCRIBE')
-      // strapi.db.lifecycles.subscribe({
-      //   models: [contentTypeUid],
-      //   afterCreate() {
-      //     console.log('AFTER CREATE IN UNSUBSCRIBE')
-      //   },
-      //   afterCreateMany() {},
-      //   afterUpdate() {},
-      //   afterUpdateMany() {},
-      //   afterDelete() {},
-      //   afterDeleteMany() {},
-      // })
     },
   }
 }

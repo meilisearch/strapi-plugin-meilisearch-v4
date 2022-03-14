@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { request, useAutoReloadOverlayBlocker } from '@strapi/helper-plugin'
+import { request } from '@strapi/helper-plugin'
 import pluginId from '../../pluginId'
+
 const hookingTextRendering = ({ indexed, listened }) => {
   if (indexed && !listened) return 'Reload needed'
   if (!indexed && listened) return 'Reload needed'
@@ -11,30 +12,8 @@ const hookingTextRendering = ({ indexed, listened }) => {
 /**
  * Reload request of the server.
  */
-export const reloadServer = async () => {
-  const {
-    lockAppWithAutoreload,
-    unlockAppWithAutoreload,
-  } = useAutoReloadOverlayBlocker()
-  try {
-    lockAppWithAutoreload()
-    await request(
-      `/${pluginId}/reload`,
-      {
-        method: 'GET',
-      },
-      true
-    )
-    // window.location.reload()
-  } catch (err) {
-    console.error(err)
-  } finally {
-    unlockAppWithAutoreload()
-  }
-}
 
 export function useCollectionReloader() {
-  const [isOnline, setIsOnline] = useState(false)
   const [collections, setCollections] = useState([])
   const [refetchIndex, setRefetchIndex] = useState(true)
   const [reloadNeeded, setReloadNeeded] = useState(false)
@@ -55,6 +34,7 @@ export function useCollectionReloader() {
       return collection
     })
     const reload = collections.find(col => col.reloadNeeded === 'Reload needed')
+    console.log({ reload })
     if (reload) {
       setReloadNeeded(true)
     } else setReloadNeeded(false)
@@ -93,17 +73,15 @@ export function useCollectionReloader() {
 
   useEffect(() => {
     fetchCollections()
-  }, [isOnline, refetchIndex])
+  }, [refetchIndex])
 
   return {
-    setIsOnline,
     collections,
-    isOnline,
     deleteCollection,
     addCollection,
     updateCollection,
     reloadNeeded,
-    reloadServer,
+    refetchCollection,
   }
 }
 

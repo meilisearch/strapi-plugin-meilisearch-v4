@@ -2,13 +2,17 @@
 /**
  * @param  {object} options
  * @param  {string[]} options.contentTypes - all indexed content types
+ * @param  {object} options.store - all indexed content types
  * @param  {object} options.lifecycle - lifecycle API
  */
-async function subscribeToLifecycles({ contentTypes, lifecycle }) {
-  const lifeCyclesPromises = contentTypes.map(async contentType => {
-    await lifecycle.subscribeContentType({ contentType })
-  })
-  return Promise.all(lifeCyclesPromises)
+async function subscribeToLifecycles({ contentTypes, lifecycle, store }) {
+  await store.emptyListenedContentTypes()
+  let lifecycles
+  for (const contentType of contentTypes) {
+    lifecycles = await lifecycle.subscribeContentType({ contentType })
+  }
+
+  return lifecycles
 }
 
 module.exports = async ({ strapi }) => {
@@ -18,5 +22,10 @@ module.exports = async ({ strapi }) => {
 
   await store.syncCredentials()
   const indexedContentTypes = await store.getIndexedContentTypes()
-  await subscribeToLifecycles({ contentTypes: indexedContentTypes, lifecycle })
+
+  await subscribeToLifecycles({
+    contentTypes: indexedContentTypes,
+    lifecycle,
+    store,
+  })
 }

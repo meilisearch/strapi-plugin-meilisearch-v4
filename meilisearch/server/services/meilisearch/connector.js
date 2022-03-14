@@ -427,7 +427,6 @@ module.exports = ({ strapi, adapter, config }) => {
 
         const indexUid = config.getIndexNameOfContentType({ contentType })
         await client.index(indexUid).delete()
-        await lifecycle.unsubscribeContentType({ contentType })
       }
 
       await store.removeIndexedContentType({ contentType })
