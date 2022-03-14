@@ -60,14 +60,15 @@ module.exports = ({ strapi }) => {
             .service('meilisearch')
 
           let entriesId = []
-          // Different way of accessing the id's in case there are multiple deletes
+          // Different ways of accessing the id's depending on the number of entries being deleted
+          // In case of multiple deletes:
           if (
             params?.where?.$and &&
             params?.where?.$and[0] &&
             params?.where?.$and[0].id?.$in
           )
             entriesId = params?.where?.$and[0].id.$in
-          // In case there is only one entry deleted the id is accessible at `result.id`
+          // In case there is only one entry being deleted
           else entriesId = [result.id]
 
           meilisearch

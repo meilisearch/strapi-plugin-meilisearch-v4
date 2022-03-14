@@ -18,9 +18,6 @@ module.exports = async ({ strapi }) => {
   const lifecycle = strapi.plugin('meilisearch').service('lifecycle')
 
   await store.syncCredentials()
-  const credentials = await store.getCredentials()
-  // console.log({ credentials })
-
   const listenedContentTypes = await store.getListenedContentTypes()
   const indexedContentTypes = await store.getIndexedContentTypes()
   await subscribeToLifecycles({ contentTypes: indexedContentTypes, lifecycle })
