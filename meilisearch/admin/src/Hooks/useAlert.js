@@ -13,7 +13,6 @@ export function useAlert() {
     message = 'Something occured in Meilisearch',
     link,
   }) => {
-    console.log({ type, message, link })
     toggleNotification({
       // required
       // type: 'info|success|warning',
