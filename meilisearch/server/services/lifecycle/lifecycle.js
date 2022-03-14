@@ -1,15 +1,25 @@
 module.exports = ({ strapi }) => {
   // const store = strapi.plugin('meilisearch').service('store')
   const contentTypeService = strapi.plugin('meilisearch').service('contentType')
+  const store = strapi.plugin('meilisearch').service('store')
   return {
-    addLifecyclesToContentType({ contentType }) {
+    /**
+     * Subscribe the content type to all required lifecycles
+     *
+     * @param  {object} options
+     * @param  {string} options.contentType
+     *
+     * @returns {void}
+     */
+    async subscribeContentType({ contentType }) {
       const contentTypeUid = contentTypeService.getContentTypeUid({
         contentType: contentType,
       })
 
       strapi.db.lifecycles.subscribe({
-        models: [contentTypeUid], // Add all the models a user wants to index in Meilisearch,
+        models: [contentTypeUid],
         afterCreate(event) {
+          console.log('AFTER CREATE')
           const { result } = event
           const meilisearch = strapi
             .plugin('meilisearch')
@@ -54,6 +64,7 @@ module.exports = ({ strapi }) => {
           )
         },
         afterDelete(event) {
+          console.log('AFTER DELETE')
           const { result, params } = event
           const meilisearch = strapi
             .plugin('meilisearch')
@@ -88,6 +99,33 @@ module.exports = ({ strapi }) => {
           )
         },
       })
+      await store.addListenedContentType({ contentType: contentTypeUid })
+    },
+
+    /**
+     * Unsubscribe the content type from all the lifecycles used
+     *
+     * @param  {object} options
+     * @param  {string} options.contentType
+     *
+     * @returns {void}
+     */
+    unsubscribeContentType({ contentType }) {
+      const contentTypeUid = contentTypeService.getContentTypeUid({
+        contentType: contentType,
+      })
+      console.log('UNSUBSCRIBE')
+      // strapi.db.lifecycles.subscribe({
+      //   models: [contentTypeUid],
+      //   afterCreate() {
+      //     console.log('AFTER CREATE IN UNSUBSCRIBE')
+      //   },
+      //   afterCreateMany() {},
+      //   afterUpdate() {},
+      //   afterUpdateMany() {},
+      //   afterDelete() {},
+      //   afterDeleteMany() {},
+      // })
     },
   }
 }

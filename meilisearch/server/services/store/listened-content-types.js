@@ -23,7 +23,7 @@ module.exports = ({ store }) => ({
   setListenedContentTypes: async function ({ contentTypes = [] }) {
     return store.setStoreKey({
       key: 'meilisearch_listened_content_types',
-      contentTypes,
+      value: contentTypes,
     })
   },
 
@@ -35,11 +35,14 @@ module.exports = ({ store }) => ({
    *
    * @returns {Promise<string[]>} - ContentType names.
    */
-  appendListenedContentType: async function ({ contentType }) {
+  addListenedContentType: async function ({ contentType }) {
     const listenedContentTypes = await this.getListenedContentTypes()
     const newSet = new Set(listenedContentTypes)
     newSet.add(contentType)
-    return this.setListenedContentTypes({ contentTypes: [...newSet] })
+
+    return this.setListenedContentTypes({
+      contentTypes: [...newSet],
+    })
   },
 
   /**
@@ -50,9 +53,9 @@ module.exports = ({ store }) => ({
    *
    * @returns {Promise<string[]>} - ContentType names.
    */
-  appendListenedContentTypes: async function ({ contentTypes }) {
+  addListenedContentTypes: async function ({ contentTypes }) {
     for (const contentType of contentTypes) {
-      await this.appendListenedContentType({ contentType })
+      await this.addListenedContentType({ contentType })
     }
     return this.getListenedContentTypes()
   },

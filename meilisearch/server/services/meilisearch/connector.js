@@ -241,13 +241,15 @@ module.exports = ({ strapi, adapter, config }) => {
             contentType,
           })
           const indexUid = config.getIndexNameOfContentType({ contentType })
-          const indexed = indexUids.includes(indexUid)
+          const indexInMeiliSearch = indexUids.includes(indexUid)
+
           const contentTypeInIndexStore = indexedContentTypes.includes(
             contentType
           )
+          const indexed = indexInMeiliSearch && contentTypeInIndexStore
 
           // safe guard in case index does not exist anymore in Meilisearch
-          if (!indexed && contentTypeInIndexStore) {
+          if (!indexInMeiliSearch && contentTypeInIndexStore) {
             await store.removeIndexedContentType({ contentType })
           }
 
@@ -266,7 +268,6 @@ module.exports = ({ strapi, adapter, config }) => {
               contentTypes: contentTypesWithSameIndexUid,
             }
           )
-          // TODO remove ifgnored collections
           return {
             collection: collectionName,
             contentType: contentType,
@@ -319,7 +320,7 @@ module.exports = ({ strapi, adapter, config }) => {
 
       const task = await client.index(indexUid).addDocuments(documents)
       await store.addIndexedContentType({ contentType })
-      await lifecycle.addLifecyclesToContentType({ contentType })
+      await lifecycle.subscribeContentType({ contentType })
 
       return task
     },
@@ -363,7 +364,7 @@ module.exports = ({ strapi, adapter, config }) => {
       })
 
       await store.addIndexedContentType({ contentType })
-      await lifecycle.addLifecyclesToContentType({ contentType })
+      await lifecycle.subscribeContentType({ contentType })
 
       return tasksUids
     },
@@ -420,11 +421,13 @@ module.exports = ({ strapi, adapter, config }) => {
           callback: deleteEntries,
         })
       } else {
+        console.log('DELETE INDEX')
         const { apiKey, host } = await store.getCredentials()
         const client = MeiliSearch({ apiKey, host })
 
         const indexUid = config.getIndexNameOfContentType({ contentType })
         await client.index(indexUid).delete()
+        await lifecycle.unsubscribeContentType({ contentType })
       }
 
       await store.removeIndexedContentType({ contentType })

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { request } from '@strapi/helper-plugin'
+import { request, useAutoReloadOverlayBlocker } from '@strapi/helper-plugin'
 import pluginId from '../../pluginId'
 const hookingTextRendering = ({ indexed, listened }) => {
   if (indexed && !listened) return 'Reload needed'
@@ -12,8 +12,12 @@ const hookingTextRendering = ({ indexed, listened }) => {
  * Reload request of the server.
  */
 export const reloadServer = async () => {
+  const {
+    lockAppWithAutoreload,
+    unlockAppWithAutoreload,
+  } = useAutoReloadOverlayBlocker()
   try {
-    // FIXME: cannot wait as unlockApp does not exist on the STRAPI API anymore
+    lockAppWithAutoreload()
     await request(
       `/${pluginId}/reload`,
       {
@@ -21,9 +25,11 @@ export const reloadServer = async () => {
       },
       true
     )
-    window.location.reload()
+    // window.location.reload()
   } catch (err) {
     console.error(err)
+  } finally {
+    unlockAppWithAutoreload()
   }
 }
 
@@ -32,7 +38,6 @@ export function useCollectionReloader() {
   const [collections, setCollections] = useState([])
   const [refetchIndex, setRefetchIndex] = useState(true)
   const [reloadNeeded, setReloadNeeded] = useState(false)
-  // const [collectionInWaitMode, setCollectionInWaitMode] = useState([]) // Collections that are waiting for their indexation to complete.
 
   const refetchCollection = () =>
     setRefetchIndex(prevRefetchIndex => !prevRefetchIndex)
