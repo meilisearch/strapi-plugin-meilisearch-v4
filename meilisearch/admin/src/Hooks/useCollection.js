@@ -18,6 +18,20 @@ export function useCollection() {
   const [collections, setCollections] = useState([])
   const [refetchIndex, setRefetchIndex] = useState(true)
   const [reloadNeeded, setReloadNeeded] = useState(false)
+  const [realTimeReports, setRealTimeReports] = useState(false)
+
+  useEffect(() => {
+    let interval
+    if (realTimeReports) {
+      interval = setInterval(() => {
+        refetchCollection()
+      }, 1000)
+    } else {
+      clearInterval(interval)
+    }
+    return () => clearInterval(interval)
+  }, [realTimeReports])
+
   const { handleNotification } = useAlert()
 
   const refetchCollection = () =>
@@ -45,6 +59,11 @@ export function useCollection() {
       const reload = collections.find(
         col => col.reloadNeeded === 'Reload needed'
       )
+
+      const isIndexing = collections.find(col => col.isIndexing === true)
+
+      if (!isIndexing) setRealTimeReports(false)
+      else setRealTimeReports(true)
 
       if (reload) {
         setReloadNeeded(true)
