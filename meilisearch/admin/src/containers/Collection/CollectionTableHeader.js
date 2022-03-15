@@ -9,7 +9,7 @@ const CollectionTableHeader = () => {
     <Thead>
       <Tr>
         <Th>
-          <BaseCheckbox aria-label="Select all entries" />
+          <VisuallyHidden>INDEX</VisuallyHidden>
         </Th>
         <Th>
           <Typography variant="sigma">NAME</Typography>
