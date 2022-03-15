@@ -115,7 +115,7 @@ The credentials are composed of:
 
 #### Using the plugin page
 
-You can add you Meilisearch credentials in the `settings` tab on the Meilisearch plugin page.
+You can add your Meilisearch credentials in the `settings` tab on the Meilisearch plugin page.
 
 For example, using the credentials from the section above: [`Run Meilisearch`](#-run-meilisearch), the following screen shows where the information should be.
 
@@ -127,7 +127,7 @@ Once completed, click on the `add` button.
 
 #### Using a config file
 
-To use the strapi config add the following to `config/plugins.js` or `config/env/[NODE_ENV]/plugin.js`:
+To use the strapi config add the following to `config/plugins.js`:
 
 ```js
 // config/plugins.js
@@ -145,7 +145,7 @@ module.exports = () => ({
 })
 ```
 
-Note that if you use both method, the config file overwrites the credentials added through the plugin page.
+Note that if you use both methods, the config file overwrites the credentials added through the plugin page.
 
 
 ### 🚛 Add your content-types to Meilisearch <!-- omit in toc -->
@@ -174,8 +174,8 @@ Once the indexing is done, your restaurants are in Meilisearch. We will see in [
 Hooks are listeners that update Meilisearch each time you add/update/delete an entry in your content-types.
 They are activated as soon as you add a content-type to Meilisearch. For example by clicking on the checkbox of `restaurant`.
 
-Nonetheless, if you **remove a content-type** from Meilisearch by unchecking the checkbox, you need to reload the server. If you don't, actions are still listened and applied to Meilisearch.
-The reload is only possible in develop mode, click on the `Reload Server` button. If not, reload the server manually!
+Nonetheless, if you **remove a content-type** from Meilisearch by unchecking the checkbox, you need to reload the server. If you don't, actions are still listened to and applied to Meilisearch.
+The reload is only possible in develop mode; click on the `Reload Server` button. If not, reload the server manually!
 
 <p align="center">
 <img src="./assets/un-check.png" alt="Remove hook from content-type" width="600"/>
@@ -186,7 +186,7 @@ The reload is only possible in develop mode, click on the `Reload Server` button
 
 ### Custom Index Name
 
-By default, when indexing a content-type in Meilisearch the index in Meilisearch has the same name as the content-type. This behavior can be changed by setting the `indexName` property in the configuration file of the plugin.
+By default, when indexing a content-type in Meilisearch, the index in Meilisearch has the same name as the content-type. This behavior can be changed by setting the `indexName` property in the configuration file of the plugin.
 
 **Example:**
 
@@ -209,7 +209,7 @@ module.exports = () => ({
 
 It is possible to bind multiple content-types to the same index. They all have to share the same `indexName`.
 
-For example if `shoes` and `shirts` should be binded to the same index, they must have the same `indexName` in the plugin configuration:
+For example if `shoes` and `shirts` should be bound to the same index, they must have the same `indexName` in the plugin configuration:
 
 ```js
 // config/plugins.js
@@ -255,7 +255,7 @@ Examples can be found [this directory](./resources/custom-index-name).
 
 By default, the plugin sent the data the way it is stored in your Strapi content-type. It is possible to remove or transform fields before sending your entries to Meilisearch.
 
-Create the alteration function `transformEntry` in plugin's configuration file. Before sending the data to Meilisearch, every entry passes through this function where the alteration is applied.
+Create the alteration function `transformEntry` in the plugin's configuration file. Before sending the data to Meilisearch, every entry passes through this function where the alteration is applied.
 
 You can find a lot of examples in [this directory](./resources/entries-transformers).
 
@@ -263,7 +263,7 @@ You can find a lot of examples in [this directory](./resources/entries-transform
 
 For example, the `restaurant` content-type has a relation with the `category` content-type. Inside a `restaurant` entry the `categories` field contains an array of each category in an `object` format: `[{ name: "Brunch" ...}, { name: "Italian ... }]`.
 
-The following transforms categories in an array of string containing only the name of the category:
+The following transforms `categories` in an array of strings containing only the name of the category:
 
 ```js
 // config/plugins.js
@@ -301,7 +301,7 @@ By transforming the `categories` into an array of names, it is now compatible wi
 
 ### Filter entries
 
-You might want to filter out some entries. This is possible with the `filterEntry`. Imagine you don't like `Alfredo's` restaurant, you can filter out this specific entry.
+You might want to filter out some entries. This is possible with the `filterEntry`. Imagine you don't like `Alfredo's` restaurant. You can filter out this specific entry.
 
 ```js
 // config/plugins.js
@@ -323,7 +323,7 @@ module.exports = {
 
 #### 🏗 Add Meilisearch Settings
 
-Each index in Meilisearch can be customized with specific settings. It is possible to add your [Meilisearch settings](https://docs.meilisearch.com/reference/features/settings.html#settings) configuration to the indexes you create using `settings` field in the plugin configuration file.
+Each index in Meilisearch can be customized with specific settings. It is possible to add your [Meilisearch settings](https://docs.meilisearch.com/reference/features/settings.html#settings) configuration to the indexes you create using the `settings` field in the plugin configuration file.
 
 The settings are added when either: adding a content-type to Meilisearch or when updating a content-type in Meilisearch. The settings are not updated when documents are added through the [`listeners`](-apply-hooks).
 
