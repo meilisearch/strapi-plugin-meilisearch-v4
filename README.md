@@ -101,12 +101,11 @@ To run the Docker script add both files `Dockerfile` and `docker-compose.yaml` a
 
 Now that you have installed the plugin, a running meiliSearch instance and, a running Strapi app, let's go to the plugin page on your admin dashboard.
 
-<!-- TODO: check -->
 On the left-navbar, `Meilisearch` appears under the `PLUGINS` category. If it does not, ensure that you have installed the plugin and re-build Strapi (see [installation](#-installation)).
 
 ### 🤫 Add Credentials <!-- omit in toc -->
 
-First, you need to configure credentials via the strapi config, or on the plugin page.
+First, you need to configure credentials via the Strapi config, or on the plugin page.
 The credentials are composed of:
 - The `host`: The url to your running Meilisearch instance.
 - The `api_key`: The `master` or `private` key as the plugin requires administration permission on Meilisearch.[More about permissions here](https://docs.meilisearch.com/reference/features/authentication.html).
@@ -127,7 +126,7 @@ Once completed, click on the `add` button.
 
 #### Using a config file
 
-To use the strapi config add the following to `config/plugins.js`:
+To use the Strapi config add the following to `config/plugins.js`:
 
 ```js
 // config/plugins.js
